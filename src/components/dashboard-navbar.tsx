@@ -43,10 +43,10 @@ export default function DashboardNavbar() {
             {t("analytics.title")}
           </Link>
           <Link
-            href="#"
+            href="/dashboard/social-media"
             className="text-sm font-medium text-muted-foreground hover:text-foreground"
           >
-            Alerts
+            Social Media
           </Link>
           <Link
             href="#"
