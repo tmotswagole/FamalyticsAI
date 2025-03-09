@@ -9,6 +9,463 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      alert_configurations: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          description: string | null
+          frequency: string | null
+          id: string
+          is_active: boolean | null
+          name: string
+          notification_channel: string[] | null
+          organization_id: string | null
+          sentiment_threshold: number | null
+          theme_id: string | null
+          updated_at: string | null
+          volume_threshold: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          frequency?: string | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          notification_channel?: string[] | null
+          organization_id?: string | null
+          sentiment_threshold?: number | null
+          theme_id?: string | null
+          updated_at?: string | null
+          volume_threshold?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          frequency?: string | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          notification_channel?: string[] | null
+          organization_id?: string | null
+          sentiment_threshold?: number | null
+          theme_id?: string | null
+          updated_at?: string | null
+          volume_threshold?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "alert_configurations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "alert_configurations_theme_id_fkey"
+            columns: ["theme_id"]
+            isOneToOne: false
+            referencedRelation: "themes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      alert_history: {
+        Row: {
+          alert_configuration_id: string | null
+          id: string
+          notification_sent: boolean | null
+          notification_sent_at: string | null
+          trigger_data: Json | null
+          trigger_reason: string | null
+          triggered_at: string | null
+        }
+        Insert: {
+          alert_configuration_id?: string | null
+          id?: string
+          notification_sent?: boolean | null
+          notification_sent_at?: string | null
+          trigger_data?: Json | null
+          trigger_reason?: string | null
+          triggered_at?: string | null
+        }
+        Update: {
+          alert_configuration_id?: string | null
+          id?: string
+          notification_sent?: boolean | null
+          notification_sent_at?: string | null
+          trigger_data?: Json | null
+          trigger_reason?: string | null
+          triggered_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "alert_history_alert_configuration_id_fkey"
+            columns: ["alert_configuration_id"]
+            isOneToOne: false
+            referencedRelation: "alert_configurations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      alert_recipients: {
+        Row: {
+          alert_configuration_id: string | null
+          created_at: string | null
+          id: string
+          user_id: string | null
+        }
+        Insert: {
+          alert_configuration_id?: string | null
+          created_at?: string | null
+          id?: string
+          user_id?: string | null
+        }
+        Update: {
+          alert_configuration_id?: string | null
+          created_at?: string | null
+          id?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "alert_recipients_alert_configuration_id_fkey"
+            columns: ["alert_configuration_id"]
+            isOneToOne: false
+            referencedRelation: "alert_configurations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      analytics_reports: {
+        Row: {
+          created_at: string | null
+          data: Json
+          id: string
+          report_date: string
+          report_type: string
+        }
+        Insert: {
+          created_at?: string | null
+          data: Json
+          id?: string
+          report_date: string
+          report_type: string
+        }
+        Update: {
+          created_at?: string | null
+          data?: Json
+          id?: string
+          report_date?: string
+          report_type?: string
+        }
+        Relationships: []
+      }
+      api_keys: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          id: string
+          is_active: boolean | null
+          key: string
+          last_used_at: string | null
+          name: string
+          organization_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          is_active?: boolean | null
+          key: string
+          last_used_at?: string | null
+          name: string
+          organization_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          is_active?: boolean | null
+          key?: string
+          last_used_at?: string | null
+          name?: string
+          organization_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "api_keys_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cron_logs: {
+        Row: {
+          created_at: string | null
+          details: Json | null
+          executed_at: string
+          id: string
+          job_name: string
+          status: string
+        }
+        Insert: {
+          created_at?: string | null
+          details?: Json | null
+          executed_at: string
+          id?: string
+          job_name: string
+          status: string
+        }
+        Update: {
+          created_at?: string | null
+          details?: Json | null
+          executed_at?: string
+          id?: string
+          job_name?: string
+          status?: string
+        }
+        Relationships: []
+      }
+      email_logs: {
+        Row: {
+          created_at: string | null
+          details: Json | null
+          id: string
+          reference_period: number | null
+          sent_at: string
+          status: string
+          subscription_id: string | null
+          type: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          details?: Json | null
+          id?: string
+          reference_period?: number | null
+          sent_at: string
+          status: string
+          subscription_id?: string | null
+          type: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          details?: Json | null
+          id?: string
+          reference_period?: number | null
+          sent_at?: string
+          status?: string
+          subscription_id?: string | null
+          type?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      feedback_entries: {
+        Row: {
+          created_at: string | null
+          feedback_date: string | null
+          id: string
+          keywords: Json | null
+          metadata: Json | null
+          organization_id: string | null
+          processed: boolean | null
+          sentiment_label: string | null
+          sentiment_score: number | null
+          source: string | null
+          text_content: string
+          themes: Json | null
+        }
+        Insert: {
+          created_at?: string | null
+          feedback_date?: string | null
+          id?: string
+          keywords?: Json | null
+          metadata?: Json | null
+          organization_id?: string | null
+          processed?: boolean | null
+          sentiment_label?: string | null
+          sentiment_score?: number | null
+          source?: string | null
+          text_content: string
+          themes?: Json | null
+        }
+        Update: {
+          created_at?: string | null
+          feedback_date?: string | null
+          id?: string
+          keywords?: Json | null
+          metadata?: Json | null
+          organization_id?: string | null
+          processed?: boolean | null
+          sentiment_label?: string | null
+          sentiment_score?: number | null
+          source?: string | null
+          text_content?: string
+          themes?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "feedback_entries_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      feedback_themes: {
+        Row: {
+          confidence_score: number | null
+          created_at: string | null
+          feedback_id: string | null
+          id: string
+          theme_id: string | null
+        }
+        Insert: {
+          confidence_score?: number | null
+          created_at?: string | null
+          feedback_id?: string | null
+          id?: string
+          theme_id?: string | null
+        }
+        Update: {
+          confidence_score?: number | null
+          created_at?: string | null
+          feedback_id?: string | null
+          id?: string
+          theme_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "feedback_themes_feedback_id_fkey"
+            columns: ["feedback_id"]
+            isOneToOne: false
+            referencedRelation: "feedback_entries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "feedback_themes_theme_id_fkey"
+            columns: ["theme_id"]
+            isOneToOne: false
+            referencedRelation: "themes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notifications: {
+        Row: {
+          created_at: string | null
+          data: Json | null
+          id: string
+          is_read: boolean | null
+          message: string
+          organization_id: string | null
+          title: string
+          type: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          data?: Json | null
+          id?: string
+          is_read?: boolean | null
+          message: string
+          organization_id?: string | null
+          title: string
+          type: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          data?: Json | null
+          id?: string
+          is_read?: boolean | null
+          message?: string
+          organization_id?: string | null
+          title?: string
+          type?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notifications_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      organizations: {
+        Row: {
+          created_at: string | null
+          id: string
+          name: string
+          settings: Json | null
+          stripe_customer_id: string | null
+          subscription_status: string | null
+          subscription_tier: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          name: string
+          settings?: Json | null
+          stripe_customer_id?: string | null
+          subscription_status?: string | null
+          subscription_tier?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          name?: string
+          settings?: Json | null
+          stripe_customer_id?: string | null
+          subscription_status?: string | null
+          subscription_tier?: string | null
+        }
+        Relationships: []
+      }
+      sentiment_analysis_requests: {
+        Row: {
+          created_at: string | null
+          id: string
+          sentiment_label: string | null
+          sentiment_score: number | null
+          source: string | null
+          text_content: string
+          themes: Json | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          sentiment_label?: string | null
+          sentiment_score?: number | null
+          source?: string | null
+          text_content: string
+          themes?: Json | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          sentiment_label?: string | null
+          sentiment_score?: number | null
+          source?: string | null
+          text_content?: string
+          themes?: Json | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       subscriptions: {
         Row: {
           amount: number | null
@@ -95,6 +552,108 @@ export type Database = {
           },
         ]
       }
+      themes: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string
+          is_system_generated: boolean | null
+          name: string
+          organization_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_system_generated?: boolean | null
+          name: string
+          organization_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_system_generated?: boolean | null
+          name?: string
+          organization_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "themes_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      trend_reports: {
+        Row: {
+          created_at: string | null
+          data: Json
+          id: string
+          organization_id: string | null
+          report_date: string
+        }
+        Insert: {
+          created_at?: string | null
+          data: Json
+          id?: string
+          organization_id?: string | null
+          report_date: string
+        }
+        Update: {
+          created_at?: string | null
+          data?: Json
+          id?: string
+          organization_id?: string | null
+          report_date?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "trend_reports_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_organizations: {
+        Row: {
+          created_at: string | null
+          id: string
+          invited_by: string | null
+          organization_id: string | null
+          role: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          invited_by?: string | null
+          organization_id?: string | null
+          role: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          invited_by?: string | null
+          organization_id?: string | null
+          role?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_organizations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       users: {
         Row: {
           avatar_url: string | null
@@ -175,7 +734,22 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_average_sentiment_score:
+        | {
+            Args: {
+              start_date: string
+              end_date: string
+            }
+            Returns: number
+          }
+        | {
+            Args: {
+              start_date: string
+              end_date: string
+              org_id: string
+            }
+            Returns: number
+          }
     }
     Enums: {
       [_ in never]: never
