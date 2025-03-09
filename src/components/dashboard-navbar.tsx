@@ -40,7 +40,7 @@ export default function DashboardNavbar() {
             href="/dashboard/analytics"
             className="text-sm font-medium text-muted-foreground hover:text-foreground"
           >
-            Analytics
+            {t("analytics.title")}
           </Link>
           <Link
             href="#"
