@@ -1,5 +1,6 @@
 import { createClient } from "../../../../../supabase/server";
 import { NextResponse } from "next/server";
+import { setUserCookie } from "@/lib/auth-cookies";
 
 export async function GET(request: Request) {
   const requestUrl = new URL(request.url);
@@ -10,7 +11,7 @@ export async function GET(request: Request) {
     const supabase = await createClient();
     await supabase.auth.exchangeCodeForSession(code);
 
-    // Check if this is a new user verification (not password reset)
+    // Check if this is a new user verification or password reset
     const {
       data: { user },
     } = await supabase.auth.getUser();
@@ -22,6 +23,9 @@ export async function GET(request: Request) {
         .select("role")
         .eq("user_id", user.id)
         .single();
+
+      // Store user data in cookies
+      setUserCookie(user, userData?.role);
 
       // If user is a system admin, redirect to admin dashboard
       if (!userError && userData?.role === "SYSADMIN") {
@@ -41,10 +45,7 @@ export async function GET(request: Request) {
         if (!userOrgs || userOrgs.length === 0) {
           // No organization, redirect to organization creation
           return NextResponse.redirect(
-            new URL(
-              redirect_to || "/success/create-organization",
-              requestUrl.origin,
-            ),
+            new URL("/success/create-organization", requestUrl.origin),
           );
         }
 
@@ -58,27 +59,13 @@ export async function GET(request: Request) {
 
         if (!subscription) {
           // No active subscription, redirect to pricing
-          return NextResponse.redirect(
-            new URL(redirect_to || "/pricing", requestUrl.origin),
-          );
+          return NextResponse.redirect(new URL("/pricing", requestUrl.origin));
         }
       }
-      // else if (!userError && userData?.role === "OBSERVER") {
-      //   // For regular users, check if they have an organization
-      //   const { data: userOrgs } = await supabase
-      //     .from("user_organizations")
-      //     .select("organization_id")
-      //     .eq("user_id", user.id);
-
-      //   // If no organization, redirect to pricing page for payment
-      //   if (!userOrgs || userOrgs.length === 0) {
-      //     return NextResponse.redirect(new URL("/pricing", requestUrl.origin));
-      //   }
-      // }
     }
   }
 
   // URL to redirect to after sign in process completes
-  // const redirectTo = redirect_to || "/dashboard";
-  // return NextResponse.redirect(new URL(redirectTo, requestUrl.origin));
+  const redirectTo = redirect_to || "/dashboard";
+  return NextResponse.redirect(new URL(redirectTo, requestUrl.origin));
 }
