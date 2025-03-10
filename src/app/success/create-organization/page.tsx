@@ -48,7 +48,7 @@ export default function CreateOrganizationPage() {
           name: orgName,
           industry: industry,
           created_by: user.id,
-          subscription_tier: "starter", // Default tier after payment
+          subscription_tier: "pro", // Default tier after payment
           subscription_status: "active",
         })
         .select()

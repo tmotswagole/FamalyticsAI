@@ -72,12 +72,14 @@ export default function AdminNavbar() {
           </Link>
         </div>
         <div className="flex gap-4 items-center">
-          <Link
-            href="/dashboard"
-            className="text-sm font-medium text-primary-foreground/80 hover:text-primary-foreground"
+          <Button
+            variant="outline"
+            size="sm"
+            className="bg-primary-foreground/10 text-primary-foreground border-primary-foreground/20"
+            onClick={() => router.push("/dashboard")}
           >
             Exit Admin Mode
-          </Link>
+          </Button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="secondary" size="icon">

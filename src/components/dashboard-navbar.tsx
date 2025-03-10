@@ -9,13 +9,36 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { Button } from "./ui/button";
-import { UserCircle, Home } from "lucide-react";
+import { UserCircle, Home, Shield } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { t } from "@/lib/content";
+import { useEffect, useState } from "react";
 
 export default function DashboardNavbar() {
   const supabase = createClient();
   const router = useRouter();
+  const [userRole, setUserRole] = useState<string | null>(null);
+
+  useEffect(() => {
+    const getUserRole = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (user) {
+        const { data } = await supabase
+          .from("auth.users")
+          .select("role")
+          .eq("user_id", user.id)
+          .single();
+
+        if (data) {
+          setUserRole(data.role);
+        }
+      }
+    };
+
+    getUserRole();
+  }, [supabase]);
 
   return (
     <nav className="w-full border-b border-gray-200 bg-white py-4">
@@ -62,6 +85,16 @@ export default function DashboardNavbar() {
           </Link>
         </div>
         <div className="flex gap-4 items-center">
+          {userRole === "SYSADMIN" && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => router.push("/admin/dashboard")}
+            >
+              <Shield className="h-4 w-4 mr-2" />
+              Admin Portal
+            </Button>
+          )}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon">

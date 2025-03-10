@@ -31,15 +31,43 @@ export default async function DashboardPage() {
     return redirect("/sign-in");
   }
 
-  // Check if user is a system admin and redirect to admin dashboard
+  // Check user role
   const { data: userData, error: userError } = await supabase
-    .from("users")
-    .select("is_super_admin")
-    .eq("id", user.id)
+    .from("auth.users")
+    .select("role")
+    .eq("user_id", user.id)
     .single();
 
-  if (!userError && userData?.is_super_admin) {
+  // If user is a system admin, redirect to admin dashboard
+  if (!userError && userData?.role === "SYSADMIN") {
     return redirect("/admin/dashboard");
+  }
+
+  // If user is a client admin
+  if (!userError && userData?.role === "CLIENTADMIN") {
+    // Check if user has an organization
+    const { data: userOrgs } = await supabase
+      .from("user_organizations")
+      .select("organization_id")
+      .eq("user_id", user.id);
+
+    if (!userOrgs || userOrgs.length === 0) {
+      // No organization, redirect to organization creation
+      return redirect("/success/create-organization");
+    }
+
+    // Check if user has an active subscription
+    const { data: subscription } = await supabase
+      .from("subscriptions")
+      .select("status")
+      .eq("user_id", user.id)
+      .eq("status", "active")
+      .single();
+
+    if (!subscription) {
+      // No active subscription, redirect to pricing
+      return redirect("/pricing");
+    }
   }
 
   // Get user's organizations

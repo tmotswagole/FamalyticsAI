@@ -4,6 +4,7 @@ import { createClient } from "../../supabase/server";
 import { encodedRedirect } from "@/utils/utils";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { setUserCookie, clearUserCookies } from "@/lib/auth-cookies";
 
 export const signUpAction = async (formData: FormData) => {
   const email = formData.get("email")?.toString();
@@ -90,8 +91,38 @@ export const signInAction = async (formData: FormData) => {
       .eq("user_id", user.id)
       .single();
 
+    // Store user data in cookies
+    setUserCookie(user, userData?.role);
+
     if (!userError && userData?.role === "SYSADMIN") {
       return redirect("/admin/dashboard");
+    }
+
+    // Check if user is a client admin
+    if (!userError && userData?.role === "CLIENTADMIN") {
+      // Check if user has an organization
+      const { data: userOrgs } = await supabase
+        .from("user_organizations")
+        .select("organization_id")
+        .eq("user_id", user.id);
+
+      if (!userOrgs || userOrgs.length === 0) {
+        // No organization, redirect to organization creation
+        return redirect("/success/create-organization");
+      }
+
+      // Check if user has an active subscription
+      const { data: subscription } = await supabase
+        .from("subscriptions")
+        .select("status")
+        .eq("user_id", user.id)
+        .eq("status", "active")
+        .single();
+
+      if (!subscription) {
+        // No active subscription, redirect to pricing
+        return redirect("/pricing");
+      }
     }
   }
 
@@ -171,6 +202,10 @@ export const resetPasswordAction = async (formData: FormData) => {
 export const signOutAction = async () => {
   const supabase = await createClient();
   await supabase.auth.signOut();
+
+  // Clear user cookies on logout
+  clearUserCookies();
+
   return redirect("/sign-in");
 };
 
