@@ -26,14 +26,6 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link
-                  href="/dashboard"
-                  className="text-gray-600 hover:text-blue-600"
-                >
-                  Dashboard
-                </Link>
-              </li>
-              <li>
                 <Link href="#" className="text-gray-600 hover:text-blue-600">
                   API Documentation
                 </Link>

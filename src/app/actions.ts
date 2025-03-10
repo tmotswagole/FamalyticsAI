@@ -85,12 +85,12 @@ export const signInAction = async (formData: FormData) => {
   if (user) {
     // Check if user is a system admin
     const { data: userData, error: userError } = await supabase
-      .from("users")
-      .select("is_super_admin")
-      .eq("id", user.id)
+      .from("auth.users")
+      .select("role")
+      .eq("user_id", user.id)
       .single();
 
-    if (!userError && userData?.is_super_admin) {
+    if (!userError && userData?.role === "SYSADMIN") {
       return redirect("/admin/dashboard");
     }
   }

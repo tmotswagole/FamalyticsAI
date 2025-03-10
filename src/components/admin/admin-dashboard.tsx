@@ -99,21 +99,21 @@ export default function AdminDashboard() {
       try {
         // Fetch user stats
         const { data: users, error: usersError } = await supabase
-          .from("users")
+          .from("auth.users")
           .select("id");
 
         if (usersError) throw usersError;
 
         // Fetch organization stats
         const { data: orgs, error: orgsError } = await supabase
-          .from("organizations")
+          .from("public.organizations")
           .select("id, subscription_tier, subscription_status");
 
         if (orgsError) throw orgsError;
 
         // Fetch admin users
         const { data: admins, error: adminsError } = await supabase
-          .from("user_organizations")
+          .from("auth.users")
           .select("id")
           .eq("role", "SYSADMIN");
 
@@ -121,7 +121,7 @@ export default function AdminDashboard() {
 
         // Fetch API keys
         const { data: apiKeys, error: apiKeysError } = await supabase
-          .from("api_keys")
+          .from("public.api_keys")
           .select("id")
           .eq("is_active", true);
 

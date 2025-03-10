@@ -34,10 +34,10 @@ export default function CSVUpload({
       skipEmptyLines: true,
       complete: async (results) => {
         try {
-          const { data, errors, meta } = results;
+          const { data, error: parseErrors, meta } = results;
 
-          if (errors.length > 0) {
-            setError(`CSV parsing error: ${errors[0].message}`);
+          if (parseErrors && parseErrors.length > 0) {
+            setError(`CSV parsing error: ${parseErrors[0].message}`);
             setUploading(false);
             return;
           }
@@ -60,7 +60,7 @@ export default function CSVUpload({
           let processedRows = 0;
           let successCount = 0;
           let errorCount = 0;
-          const errors: any[] = [];
+          const rowErrorsList: any[] = [];
 
           for (let i = 0; i < totalRows; i += batchSize) {
             const batch = data.slice(i, i + batchSize);
@@ -118,7 +118,7 @@ export default function CSVUpload({
                 successCount++;
               } else {
                 errorCount++;
-                errors.push(result.error);
+                rowErrorsList.push(result.error);
               }
             });
 
@@ -145,7 +145,7 @@ export default function CSVUpload({
             total: totalRows,
             success: successCount,
             errors: errorCount,
-            errorDetails: errors,
+            errorDetails: rowErrorsList,
           });
         } catch (error) {
           setError(
