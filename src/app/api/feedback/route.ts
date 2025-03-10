@@ -129,7 +129,7 @@ export async function POST(request: NextRequest) {
 
       // Verify user has access to this organization
       const { data: userOrg } = await supabase
-        .from("user_organizations")
+        .from("auth.users")
         .select("role")
         .eq("user_id", user.id)
         .eq("organization_id", organizationId)
@@ -249,7 +249,7 @@ export async function PUT(request: NextRequest) {
 
     // Verify user has access to this organization
     const { data: userOrg } = await supabase
-      .from("user_organizations")
+      .from("auth.users")
       .select("role")
       .eq("user_id", user.id)
       .eq("organization_id", feedback.organization_id)
@@ -325,7 +325,7 @@ export async function DELETE(request: NextRequest) {
 
     // Verify user has access to this organization
     const { data: userOrg } = await supabase
-      .from("user_organizations")
+      .from("auth.users")
       .select("role")
       .eq("user_id", user.id)
       .eq("organization_id", feedback.organization_id)

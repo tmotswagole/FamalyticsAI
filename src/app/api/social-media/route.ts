@@ -40,7 +40,7 @@ export async function GET(request: NextRequest) {
 
     // Verify user has access to this organization
     const { data: userOrg, error: userOrgError } = await supabase
-      .from("user_organizations")
+      .from("auth.users")
       .select("role")
       .eq("user_id", user.id)
       .eq("organization_id", organizationId)
@@ -108,7 +108,7 @@ export async function POST(request: NextRequest) {
 
     // Verify user has admin access to this organization
     const { data: userOrg, error: userOrgError } = await supabase
-      .from("user_organizations")
+      .from("auth.users")
       .select("role")
       .eq("user_id", user.id)
       .eq("organization_id", organization_id)
@@ -192,7 +192,7 @@ export async function GET_ENGAGEMENT(request: NextRequest) {
 
     // Verify user has access to this organization
     const { data: userOrg, error: userOrgError } = await supabase
-      .from("user_organizations")
+      .from("auth.users")
       .select("role")
       .eq("user_id", user.id)
       .eq("organization_id", organizationId)

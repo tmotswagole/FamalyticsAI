@@ -27,7 +27,7 @@ export default async function FeedbackPage() {
 
   // Get user's organizations
   const { data: userOrgs } = await supabase
-    .from("user_organizations")
+    .from("auth.users")
     .select("organization_id, organizations(id, name)")
     .eq("user_id", user.id);
 

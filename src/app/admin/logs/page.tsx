@@ -40,7 +40,7 @@ export default async function AdminLogsPage() {
 
   // Check if user is a system admin
   const { data: userOrg, error: userOrgError } = await supabase
-    .from("user_organizations")
+    .from("auth.users")
     .select("role")
     .eq("user_id", user.id)
     .single();

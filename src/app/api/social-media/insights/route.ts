@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
 
     // Verify user has access to this organization
     const { data: userOrg, error: userOrgError } = await supabase
-      .from("user_organizations")
+      .from("auth.users")
       .select("role")
       .eq("user_id", user.id)
       .eq("organization_id", organizationId)

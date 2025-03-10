@@ -16,12 +16,12 @@ export default async function AdminDashboardPage() {
 
   // Check if user is a system admin
   const { data: userOrg, error: userOrgError } = await supabase
-    .from("user_organizations")
+    .from("auth.users")
     .select("role")
     .eq("user_id", user.id)
     .single();
 
-  if (userOrgError || !userOrg || userOrg.role !== "SYSADMIN") {
+  if (!userOrg || userOrg.role !== "SYSADMIN") {
     return redirect("/dashboard");
   }
 

@@ -31,9 +31,20 @@ export default async function DashboardPage() {
     return redirect("/sign-in");
   }
 
+  // Check if user is a system admin and redirect to admin dashboard
+  const { data: userData, error: userError } = await supabase
+    .from("users")
+    .select("is_super_admin")
+    .eq("id", user.id)
+    .single();
+
+  if (!userError && userData?.is_super_admin) {
+    return redirect("/admin/dashboard");
+  }
+
   // Get user's organizations
   const { data: userOrgs } = await supabase
-    .from("user_organizations")
+    .from("auth.users")
     .select("organization_id, organizations(id, name)")
     .eq("user_id", user.id);
 
