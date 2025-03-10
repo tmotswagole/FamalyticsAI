@@ -9,7 +9,7 @@ interface ContentDictionary {
 }
 
 interface LocalizedContent {
-  [key: Language]: ContentDictionary;
+  [key: string]: ContentDictionary;
 }
 
 // Default language

@@ -16,10 +16,12 @@ export default function PricingCard({
   item,
   user,
   redirectUrl = "/success",
+  className,
 }: {
   item: any;
   user: User | null;
   redirectUrl?: string;
+  className?: string;
 }) {
   const [loading, setLoading] = useState(false);
 
@@ -68,7 +70,7 @@ export default function PricingCard({
 
   return (
     <Card
-      className={`w-[350px] relative overflow-hidden ${item.popular ? "border-2 border-blue-500 shadow-xl scale-105" : "border border-gray-200"}`}
+      className={`w-[350px] relative overflow-hidden bg-gradient-to-br from-blue-600 to-purple-600 ${item.popular ? "border-2 border-blue-300 shadow-xl scale-105" : "border border-blue-400"}`}
     >
       {item.popular && (
         <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-purple-50 opacity-30" />
@@ -79,21 +81,21 @@ export default function PricingCard({
             Most Popular
           </div>
         )}
-        <CardTitle className="text-2xl font-bold tracking-tight text-gray-900">
+        <CardTitle className="text-2xl font-bold tracking-tight text-white">
           {item.name}
         </CardTitle>
         <CardDescription className="flex items-baseline gap-2 mt-2">
-          <span className="text-4xl font-bold text-gray-900">
+          <span className="text-4xl font-bold text-white">
             ${item?.amount / 100}
           </span>
-          <span className="text-gray-600">/{item?.interval}</span>
+          <span className="text-white">/{item?.interval}</span>
         </CardDescription>
       </CardHeader>
       <CardFooter className="relative">
         <Button
           onClick={handleCheckout}
           disabled={loading}
-          className={`w-full py-6 text-lg font-medium`}
+          className={`w-full py-6 text-lg font-medium ${className}`}
         >
           {loading ? "Processing..." : "Get Started"}
         </Button>

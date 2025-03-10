@@ -87,7 +87,10 @@ export default async function AdminUsersPage() {
                 {users?.map((user) => {
                   const userOrg = user.user_organizations?.[0] || {};
                   const role = userOrg.role || "N/A";
-                  const orgName = userOrg.organizations?.name || "N/A";
+                  const orgName =
+                    userOrg.organizations && userOrg.organizations[0]
+                      ? userOrg.organizations[0].name
+                      : "N/A";
                   const lastLogin = user.last_sign_in_at
                     ? new Date(user.last_sign_in_at).toLocaleDateString()
                     : "Never";

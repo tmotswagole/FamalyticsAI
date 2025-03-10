@@ -32,7 +32,7 @@ export default function CSVUpload({
     Papa.parse(file, {
       header: true,
       skipEmptyLines: true,
-      complete: async (results) => {
+      complete: async (results: any) => {
         try {
           const { data, error: parseErrors, meta } = results;
 
@@ -156,7 +156,7 @@ export default function CSVUpload({
           setUploading(false);
         }
       },
-      error: (error) => {
+      error: (error: any) => {
         setError(`Failed to parse CSV: ${error.message}`);
         setUploading(false);
       },

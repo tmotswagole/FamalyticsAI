@@ -100,7 +100,9 @@ export default async function DashboardPage() {
   // Use the first organization for now (in a real app, you'd let the user select)
   const organizationId = userOrgs[0].organization_id;
   const organizationName =
-    userOrgs[0].organizations?.name || "Your Organization";
+    userOrgs[0].organizations && userOrgs[0].organizations[0]
+      ? userOrgs[0].organizations[0].name
+      : "Your Organization";
 
   // Mock data for the dashboard
   // In a real app, this would come from the database

@@ -11,7 +11,6 @@ import {
   BellRing,
   Upload,
   Bot,
-  Shield,
 } from "lucide-react";
 
 export default async function Home() {
@@ -20,7 +19,7 @@ export default async function Home() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const { data: plans, error } = await supabase.functions.invoke(
+  const { data: plans } = await supabase.functions.invoke(
     "supabase-functions-get-plans",
   );
 
@@ -28,12 +27,11 @@ export default async function Home() {
     <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
       <Navbar />
       <Hero />
-
       {/* Features Section */}
       <section className="py-24 bg-white">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold mb-4">
+            <h2 className="text-gray-600 text-3xl font-bold mb-4">
               Comprehensive Sentiment Analysis
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
@@ -43,7 +41,7 @@ export default async function Home() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="text-gray-600 grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
               {
                 icon: <BarChart3 className="w-6 h-6" />,
@@ -82,12 +80,13 @@ export default async function Home() {
           </div>
         </div>
       </section>
-
       {/* How It Works Section */}
       <section className="py-20 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold mb-4">How Famalytics Works</h2>
+            <h2 className="text-gray-600 text-3xl font-bold mb-4">
+              How Famalytics Works
+            </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
               Our platform makes it easy to understand what your customers are
               really saying
@@ -133,7 +132,6 @@ export default async function Home() {
           </div>
         </div>
       </section>
-
       {/* Stats Section */}
       <section className="py-20 bg-blue-600 text-white">
         <div className="container mx-auto px-4">
@@ -155,12 +153,11 @@ export default async function Home() {
           </div>
         </div>
       </section>
-
       {/* Use Cases Section */}
       <section className="py-24 bg-white">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold mb-4">
+            <h2 className="text-gray-600 text-3xl font-bold mb-4">
               Who Benefits from Famalytics
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
@@ -172,7 +169,7 @@ export default async function Home() {
           <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             <div className="bg-gray-50 p-8 rounded-xl">
               <MessageSquare className="w-10 h-10 text-blue-600 mb-4" />
-              <h3 className="text-xl font-semibold mb-3">
+              <h3 className="text-blue-600 text-xl font-semibold mb-3">
                 Customer Support Teams
               </h3>
               <p className="text-gray-600 mb-4">
@@ -182,41 +179,50 @@ export default async function Home() {
               <ul className="space-y-2">
                 <li className="flex items-start">
                   <span className="text-green-500 mr-2">✓</span>
-                  <span>Reduce response time to negative feedback</span>
+                  <span className="text-gray-600">
+                    Reduce response time to negative feedback
+                  </span>
                 </li>
                 <li className="flex items-start">
                   <span className="text-green-500 mr-2">✓</span>
-                  <span>Prioritize issues based on sentiment impact</span>
+                  <span className="text-gray-600">
+                    Prioritize issues based on sentiment impact
+                  </span>
                 </li>
               </ul>
             </div>
 
             <div className="bg-gray-50 p-8 rounded-xl">
               <BarChart3 className="w-10 h-10 text-blue-600 mb-4" />
-              <h3 className="text-xl font-semibold mb-3">Product Teams</h3>
+              <h3 className="text-blue-600 text-xl font-semibold mb-3">
+                Product Teams
+              </h3>
               <p className="text-gray-600 mb-4">
                 Understand how customers feel about specific product features
               </p>
               <ul className="space-y-2">
                 <li className="flex items-start">
                   <span className="text-green-500 mr-2">✓</span>
-                  <span>Extract feature-specific feedback automatically</span>
+                  <span className="text-gray-600">
+                    Extract feature-specific feedback automatically
+                  </span>
                 </li>
                 <li className="flex items-start">
                   <span className="text-green-500 mr-2">✓</span>
-                  <span>Track sentiment changes after product updates</span>
+                  <span className="text-gray-600">
+                    Track sentiment changes after product updates
+                  </span>
                 </li>
               </ul>
             </div>
           </div>
         </div>
       </section>
-
       {/* Pricing Section */}
       <section className="py-24 bg-gray-50" id="pricing">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold mb-4">
+            <h2 className="text-gray-600 text-3xl font-bold mb-4">
               Simple, Transparent Pricing
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
@@ -230,11 +236,10 @@ export default async function Home() {
           </div>
         </div>
       </section>
-
       {/* CTA Section */}
       <section className="py-20 bg-white">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-4">
+          <h2 className="text-gray-600 text-3xl font-bold mb-4">
             Ready to Understand Your Customers Better?
           </h2>
           <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
@@ -249,7 +254,6 @@ export default async function Home() {
           </a>
         </div>
       </section>
-
       <Footer />
     </div>
   );
