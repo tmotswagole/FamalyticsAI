@@ -1,0 +1,29 @@
+[
+  {
+    "id": "1",
+    "platform": "facebook",
+    "name": "Company Facebook Page",
+    "username": "companyfb",
+    "is_active": true,
+    "last_synced": "2023-07-15T14:30:00Z",
+    "organization_id": "org_123"
+  },
+  {
+    "id": "2",
+    "platform": "twitter",
+    "name": "Company Twitter",
+    "username": "@companytwitter",
+    "is_active": true,
+    "last_synced": "2023-07-15T14:25:00Z",
+    "organization_id": "org_123"
+  },
+  {
+    "id": "3",
+    "platform": "instagram",
+    "name": "Company Instagram",
+    "username": "companyinsta",
+    "is_active": true,
+    "last_synced": "2023-07-15T14:20:00Z",
+    "organization_id": "org_123"
+  }
+]

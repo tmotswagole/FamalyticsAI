@@ -1,0 +1,65 @@
+{
+  "users": {
+    "total": 245,
+    "active": 180,
+    "admins": 5,
+    "newToday": 12,
+    "loginActivity": [
+      {
+        "date": "2023-07-09",
+        "logins": 42,
+        "avgSessionDuration": 18
+      },
+      {
+        "date": "2023-07-10",
+        "logins": 38,
+        "avgSessionDuration": 22
+      },
+      {
+        "date": "2023-07-11",
+        "logins": 45,
+        "avgSessionDuration": 20
+      },
+      {
+        "date": "2023-07-12",
+        "logins": 50,
+        "avgSessionDuration": 24
+      },
+      {
+        "date": "2023-07-13",
+        "logins": 55,
+        "avgSessionDuration": 26
+      },
+      {
+        "date": "2023-07-14",
+        "logins": 48,
+        "avgSessionDuration": 23
+      },
+      {
+        "date": "2023-07-15",
+        "logins": 52,
+        "avgSessionDuration": 25
+      }
+    ]
+  },
+  "system": {
+    "uptime": "99.98%",
+    "responseTime": "245ms",
+    "errorRate": "0.12%",
+    "cpuUsage": 32,
+    "memoryUsage": 48,
+    "diskUsage": 61
+  },
+  "api": {
+    "totalRequests": 8420,
+    "failedRequests": 24,
+    "avgResponseTime": "120ms",
+    "activeKeys": 48
+  },
+  "ai": {
+    "tasksProcessed": 12450,
+    "pendingTasks": 32,
+    "failedTasks": 18,
+    "avgProcessingTime": "1.8s"
+  }
+}

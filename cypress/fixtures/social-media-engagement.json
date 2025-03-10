@@ -1,0 +1,47 @@
+[
+  {
+    "postId": "fb_123",
+    "platform": "facebook",
+    "postDate": "2023-07-15T10:30:00Z",
+    "content": "Check out our new product launch! We're excited to share it with you.",
+    "postUrl": "https://facebook.com/post/123",
+    "likes": 250,
+    "comments": 45,
+    "shares": 30,
+    "views": 1200,
+    "sentiment": {
+      "label": "positive",
+      "score": 0.75
+    }
+  },
+  {
+    "postId": "tw_456",
+    "platform": "twitter",
+    "postDate": "2023-07-14T14:15:00Z",
+    "content": "We're experiencing some technical difficulties. Our team is working on it.",
+    "postUrl": "https://twitter.com/post/456",
+    "likes": 120,
+    "comments": 85,
+    "shares": 15,
+    "views": 950,
+    "sentiment": {
+      "label": "negative",
+      "score": -0.45
+    }
+  },
+  {
+    "postId": "ig_789",
+    "platform": "instagram",
+    "postDate": "2023-07-13T09:45:00Z",
+    "content": "Behind the scenes at our office. #companyculture",
+    "postUrl": "https://instagram.com/p/789",
+    "likes": 350,
+    "comments": 28,
+    "shares": 5,
+    "views": 1500,
+    "sentiment": {
+      "label": "positive",
+      "score": 0.65
+    }
+  }
+]
