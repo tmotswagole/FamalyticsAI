@@ -11,61 +11,74 @@ export async function GET(request: Request) {
     const supabase = await createClient();
     await supabase.auth.exchangeCodeForSession(code);
 
-    // Check if this is a new user verification or password reset
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
+    const user = await getUser(supabase);
     if (user) {
-      // Check user role
-      const { data: userData, error: userError } = await supabase
-        .from("auth.users")
-        .select("role")
-        .eq("user_id", user.id)
-        .single();
-
-      // Store user data in cookies
-      setUserCookie(user, userData?.role);
-
-      // If user is a system admin, redirect to admin dashboard
-      if (!userError && userData?.role === "SYSADMIN") {
-        return NextResponse.redirect(
-          new URL("/admin/dashboard", requestUrl.origin),
-        );
-      }
-
-      // If user is a client admin
-      if (!userError && userData?.role === "CLIENTADMIN") {
-        // Check if user has an organization
-        const { data: userOrgs } = await supabase
-          .from("user_organizations")
-          .select("organization_id")
-          .eq("user_id", user.id);
-
-        if (!userOrgs || userOrgs.length === 0) {
-          // No organization, redirect to organization creation
-          return NextResponse.redirect(
-            new URL("/success/create-organization", requestUrl.origin),
-          );
-        }
-
-        // Check if user has an active subscription
-        const { data: subscription } = await supabase
-          .from("subscriptions")
-          .select("status")
-          .eq("user_id", user.id)
-          .eq("status", "active")
-          .single();
-
-        if (!subscription) {
-          // No active subscription, redirect to pricing
-          return NextResponse.redirect(new URL("/pricing", requestUrl.origin));
-        }
+      const redirectResponse = await handleUserRedirect(user, supabase, requestUrl);
+      if (redirectResponse) {
+        return redirectResponse;
       }
     }
   }
 
-  // URL to redirect to after sign in process completes
-  const redirectTo = redirect_to || "/dashboard";
+  const redirectTo = redirect_to ?? "/dashboard";
   return NextResponse.redirect(new URL(redirectTo, requestUrl.origin));
+}
+
+async function getUser(supabase: any) {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  return user;
+}
+
+async function handleUserRedirect(user: any, supabase: any, requestUrl: URL) {
+  const userData = await getUserData(user, supabase);
+  setUserCookie(user, userData?.role);
+
+  if (userData?.role === "SYSADMIN") {
+    return NextResponse.redirect(new URL("/admin/dashboard", requestUrl.origin));
+  }
+
+  if (userData?.role === "CLIENTADMIN") {
+    return handleClientAdminRedirect(user, supabase, requestUrl);
+  }
+}
+
+async function getUserData(user: any, supabase: any) {
+  const { data: userData } = await supabase
+    .from("auth.users")
+    .select("role")
+    .eq("user_id", user.id)
+    .single();
+  return userData;
+}
+
+async function handleClientAdminRedirect(user: any, supabase: any, requestUrl: URL) {
+  const userOrgs = await getUserOrganizations(user, supabase);
+  if (!userOrgs || userOrgs.length === 0) {
+    return NextResponse.redirect(new URL("/success/create-organization", requestUrl.origin));
+  }
+
+  const subscription = await getUserSubscription(user, supabase);
+  if (!subscription) {
+    return NextResponse.redirect(new URL("/pricing", requestUrl.origin));
+  }
+}
+
+async function getUserOrganizations(user: any, supabase: any) {
+  const { data: userOrgs } = await supabase
+    .from("user_organizations")
+    .select("organization_id")
+    .eq("user_id", user.id);
+  return userOrgs;
+}
+
+async function getUserSubscription(user: any, supabase: any) {
+  const { data: subscription } = await supabase
+    .from("subscriptions")
+    .select("status")
+    .eq("user_id", user.id)
+    .eq("status", "active")
+    .single();
+  return subscription;
 }

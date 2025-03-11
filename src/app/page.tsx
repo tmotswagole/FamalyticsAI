@@ -19,9 +19,54 @@ export default async function Home() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const { data: plans } = await supabase.functions.invoke(
-    "supabase-functions-get-plans",
-  );
+  // Use mock data directly instead of fetching from API
+  const plans = [
+    {
+      id: "price_starter",
+      name: "Starter",
+      description: "Perfect for small businesses just getting started",
+      amount: 2900,
+      interval: "month",
+      features: [
+        "Up to 1,000 feedback entries/month",
+        "Basic sentiment analysis",
+        "CSV imports",
+        "Email support",
+      ],
+      popular: false,
+    },
+    {
+      id: "price_pro",
+      name: "Pro",
+      description: "Advanced features for growing businesses",
+      amount: 7900,
+      interval: "month",
+      features: [
+        "Up to 5,000 feedback entries/month",
+        "Advanced sentiment analysis",
+        "Theme extraction",
+        "API access",
+        "Priority support",
+      ],
+      popular: true,
+    },
+    {
+      id: "price_enterprise",
+      name: "Enterprise",
+      description: "Custom solutions for large organizations",
+      amount: 19900,
+      interval: "month",
+      features: [
+        "Unlimited feedback entries",
+        "Custom AI models",
+        "White-labeling",
+        "Dedicated account manager",
+        "24/7 support",
+        "Custom integrations",
+      ],
+      popular: false,
+    },
+  ];
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
