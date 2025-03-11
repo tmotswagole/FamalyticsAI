@@ -46,7 +46,6 @@ export const NOTIFICATION_TYPES = {
 
 // Subscription tiers
 export const SUBSCRIPTION_TIERS = {
-  FREE: "free",
   BASIC: "starter",
   PRO: "pro",
   ENTERPRISE: "enterprise",

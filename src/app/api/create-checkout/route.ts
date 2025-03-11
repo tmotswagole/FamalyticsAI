@@ -1,10 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import Stripe from "stripe";
-
-// Initialize Stripe with API key
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
-  apiVersion: "2023-10-16",
-});
 
 // CORS headers for API responses
 const corsHeaders = {
@@ -30,26 +24,14 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Create Stripe checkout session
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card"],
-      line_items: [
-        {
-          price: price_id,
-          quantity: 1,
-        },
-      ],
-      mode: "subscription",
-      success_url: `${req.headers.get("origin")}${return_url}?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${req.headers.get("origin")}/pricing?canceled=true`,
-      customer_email: req.headers.get("x-customer-email"),
-      metadata: {
-        user_id,
-      },
-    });
+    // Mock checkout session creation for development
+    // In production, this would call the Stripe API
+    const mockSessionId = `cs_test_${Math.random().toString(36).substring(2, 15)}`;
+    const origin = req.headers.get("origin") || "http://localhost:3000";
+    const mockCheckoutUrl = `${origin}${return_url}?session_id=${mockSessionId}`;
 
     return NextResponse.json(
-      { sessionId: session.id, url: session.url },
+      { sessionId: mockSessionId, url: mockCheckoutUrl },
       { status: 200, headers: corsHeaders },
     );
   } catch (error: any) {
