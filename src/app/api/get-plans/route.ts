@@ -1,10 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import Stripe from "stripe";
-
-// Initialize Stripe with API key
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
-  apiVersion: "2023-10-16",
-});
 
 // CORS headers for API responses
 const corsHeaders = {
@@ -21,28 +15,54 @@ export async function OPTIONS() {
 // Handle GET requests to fetch pricing plans
 export async function GET(req: NextRequest) {
   try {
-    // Fetch all products
-    const products = await stripe.products.list({
-      active: true,
-      expand: ["data.default_price"],
-    });
-
-    // Format the products with their prices
-    const plans = products.data
-      .filter((product) => product.default_price)
-      .map((product) => {
-        const price = product.default_price as Stripe.Price;
-        return {
-          id: price.id,
-          name: product.name,
-          description: product.description,
-          amount: price.unit_amount,
-          interval: price.recurring?.interval,
-          features: product.features?.map((feature) => feature.name) || [],
-          popular: product.metadata?.popular === "true",
-        };
-      })
-      .sort((a, b) => (a.amount || 0) - (b.amount || 0));
+    // Mock pricing plans data
+    const plans = [
+      {
+        id: "price_starter",
+        name: "Starter",
+        description: "Perfect for small businesses just getting started",
+        amount: 2900,
+        interval: "month",
+        features: [
+          "Up to 1,000 feedback entries/month",
+          "Basic sentiment analysis",
+          "CSV imports",
+          "Email support",
+        ],
+        popular: false,
+      },
+      {
+        id: "price_pro",
+        name: "Pro",
+        description: "Advanced features for growing businesses",
+        amount: 7900,
+        interval: "month",
+        features: [
+          "Up to 5,000 feedback entries/month",
+          "Advanced sentiment analysis",
+          "Theme extraction",
+          "API access",
+          "Priority support",
+        ],
+        popular: true,
+      },
+      {
+        id: "price_enterprise",
+        name: "Enterprise",
+        description: "Custom solutions for large organizations",
+        amount: 19900,
+        interval: "month",
+        features: [
+          "Unlimited feedback entries",
+          "Custom AI models",
+          "White-labeling",
+          "Dedicated account manager",
+          "24/7 support",
+          "Custom integrations",
+        ],
+        popular: false,
+      },
+    ];
 
     return NextResponse.json(plans, { headers: corsHeaders });
   } catch (error: any) {
