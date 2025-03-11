@@ -25,7 +25,7 @@ export default async function Home() {
       id: "price_starter",
       name: "Starter",
       description: "Perfect for small businesses just getting started",
-      amount: 2900,
+      amount: 99,
       interval: "month",
       features: [
         "Up to 1,000 feedback entries/month",
@@ -39,7 +39,7 @@ export default async function Home() {
       id: "price_pro",
       name: "Pro",
       description: "Advanced features for growing businesses",
-      amount: 7900,
+      amount: 299,
       interval: "month",
       features: [
         "Up to 5,000 feedback entries/month",
@@ -54,7 +54,7 @@ export default async function Home() {
       id: "price_enterprise",
       name: "Enterprise",
       description: "Custom solutions for large organizations",
-      amount: 19900,
+      amount: 499,
       interval: "month",
       features: [
         "Unlimited feedback entries",
@@ -276,7 +276,49 @@ export default async function Home() {
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
             {plans?.map((item: any) => (
-              <PricingCard key={item.id} item={item} user={user} />
+              <div
+                key={item.id}
+                className="flex flex-col rounded-lg overflow-hidden bg-white shadow-lg border border-gray-200 transition-all hover:shadow-xl"
+              >
+                {item.popular && (
+                  <div className="bg-blue-600 text-white text-center py-2 font-medium">
+                    Most Popular
+                  </div>
+                )}
+                <div className="p-6 flex-grow">
+                  <h3 className="text-2xl font-bold mb-2">{item.name}</h3>
+                  <p className="text-gray-600 mb-6">{item.description}</p>
+                  <div className="flex items-baseline mb-6">
+                    <span className="text-4xl font-bold">
+                      ${(item.amount / 100).toFixed(2)}
+                    </span>
+                    <span className="text-gray-500 ml-2">/{item.interval}</span>
+                  </div>
+                  <div className="border-t border-gray-200 pt-6 mb-6">
+                    <h4 className="font-semibold mb-4">Features include:</h4>
+                    <ul className="space-y-3">
+                      {item.features.map((feature: string, index: number) => (
+                        <li key={index} className="flex items-start">
+                          <span className="text-green-500 mr-2">✓</span>
+                          <span className="text-gray-600">{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+                <div className="p-6 bg-gray-50 border-t border-gray-200">
+                  <button
+                    onClick={() =>
+                      (window.location.href = user
+                        ? `/api/create-checkout?price_id=${item.id}&user_id=${user.id}`
+                        : "/sign-in?redirect=pricing")
+                    }
+                    className={`w-full py-3 rounded-md font-medium transition-colors ${item.popular ? "bg-blue-600 text-white hover:bg-blue-700" : "bg-gray-200 text-gray-800 hover:bg-gray-300"}`}
+                  >
+                    Get Started
+                  </button>
+                </div>
+              </div>
             ))}
           </div>
         </div>
