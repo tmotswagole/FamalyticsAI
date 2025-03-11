@@ -41,7 +41,7 @@ describe("Webhook API", () => {
     // Mock the webhook response for missing signature
     cy.intercept("POST", "/api/webhook", {
       statusCode: 400,
-      body: { error: "Missing stripe signature" },
+      body: { error: "Missing Stripe signature or webhook secret" },
     }).as("webhookMissingSignature");
 
     // Make the API request without the signature header
@@ -55,7 +55,9 @@ describe("Webhook API", () => {
       body: { type: "test.event" },
     }).then((response) => {
       expect(response.status).to.eq(400);
-      expect(response.body.error).to.eq("Missing stripe signature");
+      expect(response.body.error).to.eq(
+        "Missing Stripe signature or webhook secret",
+      );
     });
   });
 
