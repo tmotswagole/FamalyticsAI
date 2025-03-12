@@ -12,6 +12,7 @@ import {
   Upload,
   Bot,
 } from "lucide-react";
+import PricingButton from "@/components/pricing-button";
 
 export default async function Home() {
   const supabase = await createClient();
@@ -307,16 +308,7 @@ export default async function Home() {
                   </div>
                 </div>
                 <div className="p-6 bg-gray-50 border-t border-gray-200">
-                  <button
-                    onClick={() =>
-                      (window.location.href = user
-                        ? `/api/create-checkout?price_id=${item.id}&user_id=${user.id}`
-                        : "/sign-in?redirect=pricing")
-                    }
-                    className={`w-full py-3 rounded-md font-medium transition-colors ${item.popular ? "bg-blue-600 text-white hover:bg-blue-700" : "bg-gray-200 text-gray-800 hover:bg-gray-300"}`}
-                  >
-                    Get Started
-                  </button>
+                  <PricingButton item={item} user={user ?? undefined} />
                 </div>
               </div>
             ))}

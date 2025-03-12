@@ -1,8 +1,8 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import Stripe from "https://esm.sh/stripe@13.6.0?target=deno";
+import { createServer } from "http";
+import Stripe from "stripe";
 
-const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
-  apiVersion: "2023-10-16",
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
+  apiVersion: "2025-01-27.acacia",
   httpClient: Stripe.createFetchHttpClient(),
 });
 
@@ -12,48 +12,57 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-customer-email",
 };
 
-serve(async (req) => {
+const server = createServer(async (req, res) => {
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+    res.writeHead(204, corsHeaders);
+    res.end();
+    return;
   }
 
   try {
-    const { price_id, user_id, return_url = "/success" } = await req.json();
-
-    if (!price_id || !user_id) {
-      throw new Error("Missing required parameters");
-    }
-
-    // Create Stripe checkout session
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card"],
-      line_items: [
-        {
-          price: price_id,
-          quantity: 1,
-        },
-      ],
-      mode: "subscription",
-      success_url: `${req.headers.get("origin")}${return_url}?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${req.headers.get("origin")}/pricing?canceled=true`,
-      customer_email: req.headers.get("X-Customer-Email"),
-      metadata: {
-        user_id,
-      },
+    let body = "";
+    req.on("data", (chunk) => {
+      body += chunk.toString();
     });
 
-    return new Response(
-      JSON.stringify({ sessionId: session.id, url: session.url }),
-      {
-        status: 200,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      },
-    );
+    req.on("end", async () => {
+      const { price_id, user_id, return_url = "/success" } = JSON.parse(body);
+
+      if (!price_id || !user_id) {
+        throw new Error("Missing required parameters");
+      }
+
+      // Create Stripe checkout session
+      const session = await stripe.checkout.sessions.create({
+        payment_method_types: ["card"],
+        line_items: [
+          {
+            price: price_id,
+            quantity: 1,
+          },
+        ],
+        mode: "subscription",
+        success_url: `${req.headers.origin}${return_url}?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${req.headers.origin}/pricing?canceled=true`,
+        customer_email: req.headers["x-customer-email"] as string,
+        metadata: {
+          user_id,
+        },
+      });
+
+      res.writeHead(200, {
+        ...corsHeaders,
+        "Content-Type": "application/json",
+      });
+      res.end(JSON.stringify({ sessionId: session.id, url: session.url }));
+    });
   } catch (error) {
     console.error("Error creating checkout session:", error);
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 400,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    res.writeHead(400, { ...corsHeaders, "Content-Type": "application/json" });
+    res.end(JSON.stringify({ error: (error as Error).message }));
   }
+});
+
+server.listen(8000, () => {
+  console.log("Server is listening on port 8000");
 });

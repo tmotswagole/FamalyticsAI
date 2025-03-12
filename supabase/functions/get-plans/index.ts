@@ -1,42 +1,40 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import Stripe from "https://esm.sh/stripe@13.6.0?target=deno";
+import Stripe from "stripe";
+import { createServer } from "http";
+import dotenv from "dotenv";
 
-const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY') || '', {
-    apiVersion: '2023-10-16',
-    httpClient: Stripe.createFetchHttpClient(),
+dotenv.config();
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
+  apiVersion: "2025-01-27.acacia",
 });
 
 const corsHeaders = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type",
+};
+
+const server = createServer(async (req, res) => {
+  if (req.method === "OPTIONS") {
+    res.writeHead(204, corsHeaders);
+    res.end();
+    return;
   }
 
+  try {
+    const plans = await stripe.plans.list({
+      active: true,
+    });
 
-serve(async (req) => {
-    if (req.method === 'OPTIONS') {
-        return new Response(null, { headers: corsHeaders });
-    }
+    res.writeHead(200, { ...corsHeaders, "Content-Type": "application/json" });
+    res.end(JSON.stringify(plans.data));
+  } catch (error) {
+    console.error("Error getting products:", error);
+    res.writeHead(400, { ...corsHeaders, "Content-Type": "application/json" });
+    res.end(JSON.stringify({ error: (error as Error).message }));
+  }
+});
 
-    try {
-        const plans = await stripe.plans.list({
-            active: true,
-        });
-
-        return new Response(
-            JSON.stringify(plans.data),
-            { 
-                headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-                status: 200 
-            }
-        );
-    } catch (error) {
-        console.error("Error getting products:", error);
-        return new Response(
-            JSON.stringify({ error: error.message }),
-            { 
-                headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-                status: 400 
-            }
-        );
-    }
+server.listen(8000, () => {
+  console.log("Server is listening on port 8000");
 });

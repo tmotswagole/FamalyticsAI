@@ -1,5 +1,13 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "@supabase/supabase-js";
+import express, {
+  Request,
+  Response,
+  NextFunction,
+  RequestHandler,
+} from "express";
+
+const app = express();
+const port = process.env.PORT || 3000;
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -7,15 +15,26 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type",
 };
 
-serve(async (req) => {
+const corsMiddleware: RequestHandler = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  res.set(corsHeaders);
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+    res.sendStatus(204);
+  } else {
+    next();
   }
+};
 
+app.use(corsMiddleware);
+
+app.post("/", async (req, res) => {
   try {
     // Create Supabase client with service role key to bypass RLS
-    const supabaseUrl = Deno.env.get("SUPABASE_URL");
-    const supabaseServiceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    const supabaseUrl = process.env.SUPABASE_URL;
+    const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
     if (!supabaseUrl || !supabaseServiceRoleKey) {
       throw new Error("Missing Supabase credentials");
@@ -23,7 +42,12 @@ serve(async (req) => {
 
     const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
 
-    const results = {};
+    const results: {
+      sessions?: { status: string; message?: string; deleted?: number };
+      webhooks?: { status: string; message?: string; deleted?: number };
+      emails?: { status: string; message?: string; deleted?: number };
+      cronLogs?: { status: string; message?: string; deleted?: number };
+    } = {};
 
     // 1. Clean up expired sessions (older than 30 days)
     const thirtyDaysAgo = new Date();
@@ -106,18 +130,13 @@ serve(async (req) => {
       executed_at: new Date().toISOString(),
     });
 
-    return new Response(JSON.stringify({ success: true, results }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    res.json({ success: true, results });
   } catch (error) {
     console.error("Error during data cleanup:", error);
-
-    return new Response(
-      JSON.stringify({ success: false, error: error.message }),
-      {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-        status: 500,
-      },
-    );
+    res.status(500).json({ success: false, error: (error as Error).message });
   }
+});
+
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });

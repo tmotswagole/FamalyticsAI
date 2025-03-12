@@ -1,8 +1,11 @@
 // Follow this setup guide to integrate the Deno runtime into your application:
 // https://deno.com/manual/getting_started/setup_your_environment
 
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "@supabase/supabase-js";
+import { createServer } from "http";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -10,15 +13,17 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type",
 };
 
-serve(async (req) => {
+const server = createServer(async (req, res) => {
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+    res.writeHead(204, corsHeaders);
+    res.end();
+    return;
   }
 
   try {
     // Create Supabase client with service role key to bypass RLS
-    const supabaseUrl = Deno.env.get("SUPABASE_URL");
-    const supabaseServiceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    const supabaseUrl = process.env.SUPABASE_URL;
+    const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
     if (!supabaseUrl || !supabaseServiceRoleKey) {
       throw new Error("Missing Supabase credentials");
@@ -27,7 +32,10 @@ serve(async (req) => {
     const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
 
     // Get request parameters
-    const url = new URL(req.url);
+    if (!req.url) {
+      throw new Error("Request URL is undefined");
+    }
+    const url = new URL(req.url, `http://${req.headers.host}`);
     const organizationId = url.searchParams.get("organization_id");
 
     // Build query for social media accounts
@@ -45,7 +53,7 @@ serve(async (req) => {
     const oneDayAgo = new Date();
     oneDayAgo.setDate(oneDayAgo.getDate() - 1);
     query = query.or(
-      `last_synced.is.null,last_synced.lt.${oneDayAgo.toISOString()}`,
+      `last_synced.is.null,last_synced.lt.${oneDayAgo.toISOString()}`
     );
 
     const { data: accounts, error: accountsError } = await query;
@@ -55,10 +63,14 @@ serve(async (req) => {
     }
 
     if (!accounts || accounts.length === 0) {
-      return new Response(
-        JSON.stringify({ message: "No accounts need syncing at this time" }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" } },
+      res.writeHead(200, {
+        ...corsHeaders,
+        "Content-Type": "application/json",
+      });
+      res.end(
+        JSON.stringify({ message: "No accounts need syncing at this time" })
       );
+      return;
     }
 
     // Group accounts by organization for better logging
@@ -85,7 +97,7 @@ serve(async (req) => {
 
         if (syncError) {
           throw new Error(
-            `Error syncing organization ${orgId}: ${syncError.message}`,
+            `Error syncing organization ${orgId}: ${syncError.message}`
           );
         }
 
@@ -101,7 +113,7 @@ serve(async (req) => {
           organization_id: orgId,
           accounts_processed: orgAccounts.length,
           status: "error",
-          error: error.message,
+          error: (error as Error).message,
         });
       }
     }
@@ -114,24 +126,25 @@ serve(async (req) => {
       executed_at: new Date().toISOString(),
     });
 
-    return new Response(
+    res.writeHead(200, { ...corsHeaders, "Content-Type": "application/json" });
+    res.end(
       JSON.stringify({
         success: true,
         organizations_processed: Object.keys(accountsByOrg).length,
         accounts_processed: accounts.length,
         results,
-      }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" } },
+      })
     );
   } catch (error) {
     console.error("Error in scheduled social media sync:", error);
 
-    return new Response(
-      JSON.stringify({ success: false, error: error.message }),
-      {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-        status: 500,
-      },
+    res.writeHead(500, { ...corsHeaders, "Content-Type": "application/json" });
+    res.end(
+      JSON.stringify({ success: false, error: (error as Error).message })
     );
   }
+});
+
+server.listen(8000, () => {
+  console.log("Server is listening on port 8000");
 });

@@ -1,10 +1,12 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import Stripe from "https://esm.sh/stripe@13.6.0?target=deno";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import Stripe from "stripe";
+import { createClient } from "@supabase/supabase-js";
+import { createServer } from "http";
+import dotenv from "dotenv";
 
-const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
-  apiVersion: "2023-10-16",
-  httpClient: Stripe.createFetchHttpClient(),
+dotenv.config();
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
+  apiVersion: "2025-01-27.acacia",
 });
 
 const corsHeaders = {
@@ -13,15 +15,17 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type",
 };
 
-serve(async (req) => {
+const server = createServer(async (req, res) => {
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+    res.writeHead(204, corsHeaders);
+    res.end();
+    return;
   }
 
   try {
     // Create Supabase client with service role key to bypass RLS
-    const supabaseUrl = Deno.env.get("SUPABASE_URL");
-    const supabaseServiceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    const supabaseUrl = process.env.SUPABASE_URL;
+    const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
     if (!supabaseUrl || !supabaseServiceRoleKey) {
       throw new Error("Missing Supabase credentials");
@@ -50,7 +54,7 @@ serve(async (req) => {
       try {
         // Cancel the subscription in Stripe
         const canceledSubscription = await stripe.subscriptions.cancel(
-          trial.stripe_id,
+          trial.stripe_id
         );
 
         // Update the subscription status in the database
@@ -87,14 +91,11 @@ serve(async (req) => {
             .single();
 
           if (!userError && userData?.email) {
-            await supabase.auth.admin.createMessage({
-              template_id: "trial-ended", // This would be a template you've set up in Supabase
+            await supabase.from("messages").insert({
               to: userData.email,
               subject: "Your Famalytics trial has ended",
-              data: {
-                dashboard_url: `${Deno.env.get("SITE_URL")}/dashboard`,
-                pricing_url: `${Deno.env.get("SITE_URL")}/#pricing`,
-              },
+              body: `Your trial has ended. Visit your dashboard: ${process.env.SITE_URL}/dashboard or check our pricing: ${process.env.SITE_URL}/#pricing`,
+              created_at: new Date().toISOString(),
             });
           }
         }
@@ -103,7 +104,7 @@ serve(async (req) => {
           id: trial.id,
           stripe_id: trial.stripe_id,
           status: "error",
-          message: error.message,
+          message: (error as Error).message,
         });
       }
     }
@@ -116,23 +117,24 @@ serve(async (req) => {
       executed_at: new Date().toISOString(),
     });
 
-    return new Response(
+    res.writeHead(200, { ...corsHeaders, "Content-Type": "application/json" });
+    res.end(
       JSON.stringify({
         success: true,
         processed: expiredTrials.length,
         results,
-      }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" } },
+      })
     );
   } catch (error) {
     console.error("Error canceling expired trials:", error);
 
-    return new Response(
-      JSON.stringify({ success: false, error: error.message }),
-      {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-        status: 500,
-      },
+    res.writeHead(500, { ...corsHeaders, "Content-Type": "application/json" });
+    res.end(
+      JSON.stringify({ success: false, error: (error as Error).message })
     );
   }
+});
+
+server.listen(8000, () => {
+  console.log("Server is listening on port 8000");
 });

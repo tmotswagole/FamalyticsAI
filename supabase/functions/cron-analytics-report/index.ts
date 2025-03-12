@@ -1,5 +1,8 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createServer } from "http";
+import { createClient } from "@supabase/supabase-js";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -7,15 +10,17 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type",
 };
 
-serve(async (req) => {
+const server = createServer(async (req, res) => {
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+    res.writeHead(204, corsHeaders);
+    res.end();
+    return;
   }
 
   try {
     // Create Supabase client with service role key to bypass RLS
-    const supabaseUrl = Deno.env.get("SUPABASE_URL");
-    const supabaseServiceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    const supabaseUrl = process.env.SUPABASE_URL;
+    const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
     if (!supabaseUrl || !supabaseServiceRoleKey) {
       throw new Error("Missing Supabase credentials");
@@ -66,7 +71,7 @@ serve(async (req) => {
       {
         start_date: startOfYesterday.toISOString(),
         end_date: endOfYesterday.toISOString(),
-      },
+      }
     );
 
     // Compile the report data
@@ -77,7 +82,13 @@ serve(async (req) => {
       active_subscriptions: activeSubscriptions?.[0]?.count || 0,
       sentiment_analysis_requests: sentimentRequests?.[0]?.count || 0,
       average_sentiment_score: avgSentiment || null,
-      errors: {},
+      errors: {
+        users: "",
+        subscriptions: "",
+        active_subscriptions: "",
+        sentiment_requests: "",
+        avg_sentiment: "",
+      },
     };
 
     // Add any errors to the report
@@ -112,18 +123,18 @@ serve(async (req) => {
       executed_at: new Date().toISOString(),
     });
 
-    return new Response(JSON.stringify({ success: true, report: reportData }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    res.writeHead(200, { ...corsHeaders, "Content-Type": "application/json" });
+    res.end(JSON.stringify({ success: true, report: reportData }));
   } catch (error) {
     console.error("Error generating analytics report:", error);
 
-    return new Response(
-      JSON.stringify({ success: false, error: error.message }),
-      {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-        status: 500,
-      },
+    res.writeHead(500, { ...corsHeaders, "Content-Type": "application/json" });
+    res.end(
+      JSON.stringify({ success: false, error: (error as Error).message })
     );
   }
+});
+
+server.listen(8000, () => {
+  console.log("Server is listening on port 8000");
 });

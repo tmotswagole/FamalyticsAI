@@ -1,5 +1,8 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "@supabase/supabase-js";
+import { createServer } from "http";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -7,15 +10,17 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type",
 };
 
-serve(async (req) => {
+const server = createServer(async (req, res) => {
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+    res.writeHead(204, corsHeaders);
+    res.end();
+    return;
   }
 
   try {
     // Create Supabase client with service role key to bypass RLS
-    const supabaseUrl = Deno.env.get("SUPABASE_URL");
-    const supabaseServiceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    const supabaseUrl = process.env.SUPABASE_URL;
+    const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
     if (!supabaseUrl || !supabaseServiceRoleKey) {
       throw new Error("Missing Supabase credentials");
@@ -66,20 +71,15 @@ serve(async (req) => {
 
         // Format renewal date for email
         const renewalDate = new Date(
-          subscription.current_period_end * 1000,
+          subscription.current_period_end * 1000
         ).toLocaleDateString();
 
         // Send email using Supabase's built-in email service
-        const { error: emailError } = await supabase.auth.admin.createMessage({
-          template_id: "renewal-reminder", // This would be a template you've set up in Supabase
+        const { error: emailError } = await supabase.from("emails").insert({
           to: subscription.users.email,
           subject: "Your Famalytics subscription is renewing soon",
-          data: {
-            renewal_date: renewalDate,
-            subscription_plan: subscription.price_id,
-            amount: `$${(subscription.amount / 100).toFixed(2)}`,
-            dashboard_url: `${Deno.env.get("SITE_URL")}/dashboard`,
-          },
+          body: `Your subscription will renew on ${renewalDate}. Plan: ${subscription.price_id}, Amount: $${(subscription.amount / 100).toFixed(2)}. Visit your dashboard: ${process.env.SITE_URL}/dashboard`,
+          type: "renewal-reminder",
         });
 
         if (emailError) {
@@ -107,7 +107,7 @@ serve(async (req) => {
           id: subscription.id,
           email: subscription.users?.email,
           status: "error",
-          message: error.message,
+          message: (error as Error).message,
         });
       }
     }
@@ -120,23 +120,24 @@ serve(async (req) => {
       executed_at: new Date().toISOString(),
     });
 
-    return new Response(
+    res.writeHead(200, { ...corsHeaders, "Content-Type": "application/json" });
+    res.end(
       JSON.stringify({
         success: true,
         processed: subscriptions.length,
         results,
-      }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" } },
+      })
     );
   } catch (error) {
     console.error("Error sending renewal reminders:", error);
 
-    return new Response(
-      JSON.stringify({ success: false, error: error.message }),
-      {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-        status: 500,
-      },
+    res.writeHead(500, { ...corsHeaders, "Content-Type": "application/json" });
+    res.end(
+      JSON.stringify({ success: false, error: (error as Error).message })
     );
   }
+});
+
+server.listen(8000, () => {
+  console.log("Server is listening on port 8000");
 });

@@ -3,8 +3,12 @@ import { createClient } from "@supabase/supabase-js";
 import Stripe from "stripe";
 
 // Initialize Stripe with API key
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
-  apiVersion: "2023-10-16",
+const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
+if (!stripeSecretKey) {
+  throw new Error("Missing STRIPE_SECRET_KEY in environment variables");
+}
+const stripe = new Stripe(stripeSecretKey || "", {
+  apiVersion: "2025-01-27.acacia",
 });
 
 // CORS headers for API responses
@@ -48,7 +52,7 @@ export async function POST(req: NextRequest) {
       console.error(`Webhook signature verification failed: ${err.message}`);
       return NextResponse.json(
         { error: "Invalid signature" },
-        { status: 400, headers: corsHeaders },
+        { status: 400, headers: corsHeaders }
       );
     }
 
@@ -59,7 +63,7 @@ export async function POST(req: NextRequest) {
         const userId = session.metadata?.user_id;
         const subscriptionId = session.subscription;
 
-        if (userId && subscriptionId) {
+        if (userId && typeof subscriptionId === "string") {
           // Get subscription details
           const subscription =
             await stripe.subscriptions.retrieve(subscriptionId);
@@ -69,7 +73,7 @@ export async function POST(req: NextRequest) {
           let subscriptionTier = "starter";
           if (priceId.includes("pro")) {
             subscriptionTier = "pro";
-          } else if (priceId.includes("ent")) {
+          } else if (priceId.includes("enterprise")) {
             subscriptionTier = "enterprise";
           }
 
@@ -84,10 +88,10 @@ export async function POST(req: NextRequest) {
               price_id: priceId,
               subscription_tier: subscriptionTier,
               current_period_start: new Date(
-                subscription.current_period_start * 1000,
+                subscription.current_period_start * 1000
               ).toISOString(),
               current_period_end: new Date(
-                subscription.current_period_end * 1000,
+                subscription.current_period_end * 1000
               ).toISOString(),
               created_at: new Date().toISOString(),
               updated_at: new Date().toISOString(),
@@ -124,7 +128,7 @@ export async function POST(req: NextRequest) {
         let subscriptionTier = "starter";
         if (priceId.includes("pro")) {
           subscriptionTier = "pro";
-        } else if (priceId.includes("ent")) {
+        } else if (priceId.includes("enterprise")) {
           subscriptionTier = "enterprise";
         }
 
@@ -136,10 +140,10 @@ export async function POST(req: NextRequest) {
             price_id: priceId,
             subscription_tier: subscriptionTier,
             current_period_start: new Date(
-              subscription.current_period_start * 1000,
+              subscription.current_period_start * 1000
             ).toISOString(),
             current_period_end: new Date(
-              subscription.current_period_end * 1000,
+              subscription.current_period_end * 1000
             ).toISOString(),
             updated_at: new Date().toISOString(),
           })
@@ -173,13 +177,13 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(
       { received: true },
-      { status: 200, headers: corsHeaders },
+      { status: 200, headers: corsHeaders }
     );
   } catch (error: any) {
     console.error("Error processing webhook:", error);
     return NextResponse.json(
       { error: error.message },
-      { status: 400, headers: corsHeaders },
+      { status: 400, headers: corsHeaders }
     );
   }
 }
