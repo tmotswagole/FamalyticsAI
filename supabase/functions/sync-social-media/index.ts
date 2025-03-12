@@ -1,8 +1,12 @@
 // Follow this setup guide to integrate the Deno runtime into your application:
 // https://deno.com/manual/getting_started/setup_your_environment
 
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "@supabase/supabase-js";
+import fetch from "node-fetch";
+import { createServer } from "http";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 interface SocialMediaCredentials {
   platform: "facebook" | "twitter" | "instagram" | "linkedin";
@@ -40,15 +44,17 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type",
 };
 
-serve(async (req) => {
+const server = createServer(async (req, res) => {
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+    res.writeHead(204, corsHeaders);
+    res.end();
+    return;
   }
 
   try {
     // Create Supabase client with service role key to bypass RLS
-    const supabaseUrl = Deno.env.get("SUPABASE_URL");
-    const supabaseServiceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    const supabaseUrl = process.env.SUPABASE_URL;
+    const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
     if (!supabaseUrl || !supabaseServiceRoleKey) {
       throw new Error("Missing Supabase credentials");
@@ -67,10 +73,14 @@ serve(async (req) => {
     }
 
     if (!accounts || accounts.length === 0) {
-      return new Response(
-        JSON.stringify({ message: "No active social media accounts found" }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" } },
+      res.writeHead(200, {
+        ...corsHeaders,
+        "Content-Type": "application/json",
+      });
+      res.end(
+        JSON.stringify({ message: "No active social media accounts found" })
       );
+      return;
     }
 
     const results = [];
@@ -80,7 +90,7 @@ serve(async (req) => {
       try {
         // Decrypt credentials
         const credentials: SocialMediaCredentials = JSON.parse(
-          account.credentials,
+          account.credentials
         );
         credentials.platform = account.platform;
 
@@ -113,7 +123,7 @@ serve(async (req) => {
                 metadata: post.metadata,
                 updated_at: new Date().toISOString(),
               })),
-              { onConflict: "platform,post_id" },
+              { onConflict: "platform,post_id" }
             );
 
           if (insertError) {
@@ -146,7 +156,7 @@ serve(async (req) => {
           account_id: account.id,
           platform: account.platform,
           status: "error",
-          error: error.message,
+          error: (error as Error).message,
         });
       }
     }
@@ -159,25 +169,26 @@ serve(async (req) => {
       executed_at: new Date().toISOString(),
     });
 
-    return new Response(
+    res.writeHead(200, { ...corsHeaders, "Content-Type": "application/json" });
+    res.end(
       JSON.stringify({
         success: true,
         accounts_processed: accounts.length,
         results,
-      }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" } },
+      })
     );
   } catch (error) {
     console.error("Error syncing social media data:", error);
 
-    return new Response(
-      JSON.stringify({ success: false, error: error.message }),
-      {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-        status: 500,
-      },
+    res.writeHead(500, { ...corsHeaders, "Content-Type": "application/json" });
+    res.end(
+      JSON.stringify({ success: false, error: (error as Error).message })
     );
   }
+});
+
+server.listen(8000, () => {
+  console.log("Server is listening on port 8000");
 });
 
 /**
@@ -185,7 +196,7 @@ serve(async (req) => {
  */
 async function fetchPlatformEngagement(
   credentials: SocialMediaCredentials,
-  daysBack: number = 30,
+  daysBack: number = 30
 ): Promise<EngagementMetrics[]> {
   switch (credentials.platform) {
     case "facebook":
@@ -206,7 +217,7 @@ async function fetchPlatformEngagement(
  */
 async function getFacebookEngagement(
   credentials: SocialMediaCredentials,
-  daysBack: number = 30,
+  daysBack: number = 30
 ): Promise<EngagementMetrics[]> {
   try {
     const { accessToken, pageId, groupId } = credentials;
@@ -225,7 +236,7 @@ async function getFacebookEngagement(
       : `https://graph.facebook.com/v18.0/${groupId}/feed`;
 
     const response = await fetch(
-      `${endpoint}?fields=id,message,created_time,permalink_url,likes.summary(true),comments.summary(true),shares&since=${since}&access_token=${accessToken}`,
+      `${endpoint}?fields=id,message,created_time,permalink_url,likes.summary(true),comments.summary(true),shares&since=${since}&access_token=${accessToken}`
     );
 
     if (!response.ok) {
@@ -263,7 +274,7 @@ async function getFacebookEngagement(
  */
 async function getTwitterEngagement(
   credentials: SocialMediaCredentials,
-  daysBack: number = 30,
+  daysBack: number = 30
 ): Promise<EngagementMetrics[]> {
   try {
     const { accessToken, accessSecret, username } = credentials;
@@ -290,7 +301,7 @@ async function getTwitterEngagement(
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
-      },
+      }
     );
 
     if (!response.ok) {
@@ -329,7 +340,7 @@ async function getTwitterEngagement(
  */
 async function getInstagramEngagement(
   credentials: SocialMediaCredentials,
-  daysBack: number = 30,
+  daysBack: number = 30
 ): Promise<EngagementMetrics[]> {
   try {
     const { accessToken, pageId } = credentials;
@@ -344,7 +355,7 @@ async function getInstagramEngagement(
 
     // First, get the Instagram Business Account ID from the Facebook Page
     const accountResponse = await fetch(
-      `https://graph.facebook.com/v18.0/${pageId}?fields=instagram_business_account&access_token=${accessToken}`,
+      `https://graph.facebook.com/v18.0/${pageId}?fields=instagram_business_account&access_token=${accessToken}`
     );
 
     if (!accountResponse.ok) {
@@ -357,14 +368,14 @@ async function getInstagramEngagement(
 
     if (!instagramAccountId) {
       throw new Error(
-        "No Instagram Business account found for this Facebook Page",
+        "No Instagram Business account found for this Facebook Page"
       );
     }
 
     // Now get the media from the Instagram Business Account
     const since = Math.floor(Date.now() / 1000) - daysBack * 24 * 60 * 60;
     const mediaResponse = await fetch(
-      `https://graph.facebook.com/v18.0/${instagramAccountId}/media?fields=id,caption,permalink,timestamp,like_count,comments_count,media_url&since=${since}&access_token=${accessToken}`,
+      `https://graph.facebook.com/v18.0/${instagramAccountId}/media?fields=id,caption,permalink,timestamp,like_count,comments_count,media_url&since=${since}&access_token=${accessToken}`
     );
 
     if (!mediaResponse.ok) {
@@ -403,7 +414,7 @@ async function getInstagramEngagement(
  */
 async function getLinkedInEngagement(
   credentials: SocialMediaCredentials,
-  daysBack: number = 30,
+  daysBack: number = 30
 ): Promise<EngagementMetrics[]> {
   try {
     const { accessToken, pageId } = credentials;
@@ -435,7 +446,7 @@ async function getLinkedInEngagement(
     if (!response.ok) {
       const error = await response.json();
       throw new Error(
-        `LinkedIn API error: ${error.message || "Unknown error"}`,
+        `LinkedIn API error: ${error.message || "Unknown error"}`
       );
     }
 
@@ -464,7 +475,7 @@ async function getLinkedInEngagement(
                 "X-Restli-Protocol-Version": "2.0.0",
                 "LinkedIn-Version": "202302",
               },
-            },
+            }
           );
 
           if (!socialResponse.ok) {
@@ -489,11 +500,11 @@ async function getLinkedInEngagement(
         } catch (error) {
           console.error(
             `Error fetching engagement for LinkedIn post ${post.id}:`,
-            error,
+            error
           );
           return null;
         }
-      }),
+      })
     );
 
     return postsWithEngagement.filter(Boolean) as EngagementMetrics[];

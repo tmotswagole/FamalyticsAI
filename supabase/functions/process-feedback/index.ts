@@ -1,5 +1,9 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "@supabase/supabase-js";
+import fetch from "node-fetch";
+import { createServer } from "http";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -14,9 +18,9 @@ interface SentimentAnalysisResult {
 }
 
 async function analyzeSentiment(
-  text: string,
+  text: string
 ): Promise<SentimentAnalysisResult> {
-  const openaiApiKey = Deno.env.get("OPENAI_API_KEY");
+  const openaiApiKey = process.env.OPENAI_API_KEY;
   if (!openaiApiKey) {
     throw new Error("OPENAI_API_KEY environment variable not set");
   }
@@ -48,7 +52,7 @@ async function analyzeSentiment(
 
   if (!response.ok) {
     throw new Error(
-      `OpenAI API error: ${response.status} ${response.statusText}`,
+      `OpenAI API error: ${response.status} ${response.statusText}`
     );
   }
 
@@ -62,15 +66,17 @@ async function analyzeSentiment(
   };
 }
 
-serve(async (req) => {
+const server = createServer(async (req, res) => {
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+    res.writeHead(204, corsHeaders);
+    res.end();
+    return;
   }
 
   try {
     // Create Supabase client with service role key to bypass RLS
-    const supabaseUrl = Deno.env.get("SUPABASE_URL");
-    const supabaseServiceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    const supabaseUrl = process.env.SUPABASE_URL;
+    const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
     if (!supabaseUrl || !supabaseServiceRoleKey) {
       throw new Error("Missing Supabase credentials");
@@ -87,15 +93,17 @@ serve(async (req) => {
 
     if (fetchError) {
       throw new Error(
-        `Error fetching unprocessed feedback: ${fetchError.message}`,
+        `Error fetching unprocessed feedback: ${fetchError.message}`
       );
     }
 
     if (!unprocessedFeedback || unprocessedFeedback.length === 0) {
-      return new Response(
-        JSON.stringify({ message: "No unprocessed feedback found" }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" } },
-      );
+      res.writeHead(200, {
+        ...corsHeaders,
+        "Content-Type": "application/json",
+      });
+      res.end(JSON.stringify({ message: "No unprocessed feedback found" }));
+      return;
     }
 
     const results = [];
@@ -137,7 +145,7 @@ serve(async (req) => {
             .from("themes")
             .select("id, name, description")
             .or(
-              `organization_id.eq.${feedback.organization_id},is_system_generated.eq.true`,
+              `organization_id.eq.${feedback.organization_id},is_system_generated.eq.true`
             );
 
           if (themes && themes.length > 0) {
@@ -166,7 +174,7 @@ serve(async (req) => {
               for (const [key, themeNames] of Object.entries(keywordThemeMap)) {
                 if (lowerKeyword.includes(key)) {
                   themeNames.forEach((themeName) =>
-                    matchedThemes.add(themeName),
+                    matchedThemes.add(themeName)
                   );
                 }
               }
@@ -255,28 +263,29 @@ serve(async (req) => {
         results.push({
           id: feedback.id,
           status: "error",
-          message: error.message,
+          message: (error as Error).message,
         });
       }
     }
 
-    return new Response(
+    res.writeHead(200, { ...corsHeaders, "Content-Type": "application/json" });
+    res.end(
       JSON.stringify({
         success: true,
         processed: results.length,
         results,
-      }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" } },
+      })
     );
   } catch (error) {
     console.error("Error processing feedback:", error);
 
-    return new Response(
-      JSON.stringify({ success: false, error: error.message }),
-      {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-        status: 500,
-      },
+    res.writeHead(500, { ...corsHeaders, "Content-Type": "application/json" });
+    res.end(
+      JSON.stringify({ success: false, error: (error as Error).message })
     );
   }
+});
+
+server.listen(8000, () => {
+  console.log("Server is listening on port 8000");
 });

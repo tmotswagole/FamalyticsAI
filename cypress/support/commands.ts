@@ -10,6 +10,19 @@
 // https://on.cypress.io/custom-commands
 // ***********************************************
 
+export {}; // Add this line to make the file a module
+
+declare global {
+  namespace Cypress {
+    interface Chainable {
+      login(email: string, password: string): Chainable<void>;
+      // drag(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
+      // dismiss(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
+      // visit(originalFn: CommandOriginalFn, url: string, options: Partial<VisitOptions>): Chainable<Element>
+    }
+  }
+}
+
 // -- This is a parent command --
 Cypress.Commands.add("login", (email: string, password: string) => {
   cy.visit("/sign-in");
@@ -29,14 +42,3 @@ Cypress.Commands.add("login", (email: string, password: string) => {
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
-//
-declare global {
-  namespace Cypress {
-    interface Chainable {
-      login(email: string, password: string): Chainable<void>;
-      // drag(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
-      // dismiss(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
-      // visit(originalFn: CommandOriginalFn, url: string, options: Partial<VisitOptions>): Chainable<Element>
-    }
-  }
-}
