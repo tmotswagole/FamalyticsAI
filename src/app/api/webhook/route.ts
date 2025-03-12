@@ -3,7 +3,11 @@ import { createClient } from "@supabase/supabase-js";
 import Stripe from "stripe";
 
 // Initialize Stripe with API key
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
+const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
+if (!stripeSecretKey) {
+  throw new Error("Missing STRIPE_SECRET_KEY in environment variables");
+}
+const stripe = new Stripe(stripeSecretKey || "", {
   apiVersion: "2025-01-27.acacia",
 });
 
