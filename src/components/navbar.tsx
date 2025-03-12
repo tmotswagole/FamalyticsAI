@@ -46,9 +46,27 @@ export default async function Navbar() {
           <ThemeToggle />
           {user ? (
             <>
-              <Link href="/dashboard" className="px-4 py-2 text-sm font-medium">
-                <Button>{t("nav.dashboard")}</Button>
-              </Link>
+              {(() => {
+                if (user.role === "SYSADMIN") {
+                  return (
+                    <Link
+                      href="/admin/dashboard"
+                      className="px-4 py-2 text-sm font-medium"
+                    >
+                      <Button>{t("nav.dashboard")}</Button>
+                    </Link>
+                  );
+                } else if (user.role === "CLIENTADMIN") {
+                  return (
+                    <Link
+                      href="/dashboard"
+                      className="px-4 py-2 text-sm font-medium"
+                    >
+                      <Button>{t("nav.dashboard")}</Button>
+                    </Link>
+                  );
+                }
+              })()}
               <UserProfile />
             </>
           ) : (
