@@ -88,14 +88,16 @@ export default async function AdminAIPerformancePage() {
 
       <main className="container mx-auto py-8 px-4">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold tracking-tight">AI Performance</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">
+            AI Performance
+          </h1>
           <p className="text-muted-foreground mt-2">
             Monitor AI task processing, model performance, and usage metrics
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-          <Card>
+          <Card className="bg-card text-card-foreground">
             <CardContent className="p-6 flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-muted-foreground">
@@ -109,7 +111,7 @@ export default async function AdminAIPerformancePage() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-card text-card-foreground">
             <CardContent className="p-6 flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-muted-foreground">
@@ -123,7 +125,7 @@ export default async function AdminAIPerformancePage() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-card text-card-foreground">
             <CardContent className="p-6 flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-muted-foreground">
@@ -137,7 +139,7 @@ export default async function AdminAIPerformancePage() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-card text-card-foreground">
             <CardContent className="p-6 flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-muted-foreground">
@@ -160,7 +162,7 @@ export default async function AdminAIPerformancePage() {
           </TabsList>
 
           <TabsContent value="tasks" className="space-y-6">
-            <Card>
+            <Card className="bg-card text-card-foreground">
               <CardHeader>
                 <CardTitle>Recent AI Tasks</CardTitle>
                 <CardDescription>
@@ -184,7 +186,7 @@ export default async function AdminAIPerformancePage() {
                   <TableBody>
                     {mockTasks.map((task) => {
                       const timestamp = new Date(
-                        task.created_at,
+                        task.created_at
                       ).toLocaleString();
                       const status = task.status;
 
@@ -214,7 +216,11 @@ export default async function AdminAIPerformancePage() {
                           <TableCell>{timestamp}</TableCell>
                           <TableCell>{task.organization_id}</TableCell>
                           <TableCell>
-                            <Button variant="outline" size="sm">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="text-primary-foreground bg-button-bg"
+                            >
                               View Details
                             </Button>
                           </TableCell>
@@ -228,7 +234,7 @@ export default async function AdminAIPerformancePage() {
           </TabsContent>
 
           <TabsContent value="models" className="space-y-6">
-            <Card>
+            <Card className="bg-card text-card-foreground">
               <CardHeader>
                 <CardTitle>Model Performance</CardTitle>
                 <CardDescription>
@@ -304,7 +310,7 @@ export default async function AdminAIPerformancePage() {
           </TabsContent>
 
           <TabsContent value="usage" className="space-y-6">
-            <Card>
+            <Card className="bg-card text-card-foreground">
               <CardHeader>
                 <CardTitle>Organization Usage</CardTitle>
                 <CardDescription>AI task usage by organization</CardDescription>
@@ -331,7 +337,11 @@ export default async function AdminAIPerformancePage() {
                       <TableCell>1.5s</TableCell>
                       <TableCell>GPT-3.5 Turbo</TableCell>
                       <TableCell>
-                        <Button variant="outline" size="sm">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="text-primary-foreground bg-button-bg"
+                        >
                           Details
                         </Button>
                       </TableCell>
@@ -344,7 +354,11 @@ export default async function AdminAIPerformancePage() {
                       <TableCell>1.8s</TableCell>
                       <TableCell>GPT-4</TableCell>
                       <TableCell>
-                        <Button variant="outline" size="sm">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="text-primary-foreground bg-button-bg"
+                        >
                           Details
                         </Button>
                       </TableCell>
@@ -357,7 +371,11 @@ export default async function AdminAIPerformancePage() {
                       <TableCell>1.6s</TableCell>
                       <TableCell>Claude</TableCell>
                       <TableCell>
-                        <Button variant="outline" size="sm">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="text-primary-foreground bg-button-bg"
+                        >
                           Details
                         </Button>
                       </TableCell>
@@ -370,7 +388,11 @@ export default async function AdminAIPerformancePage() {
                       <TableCell>1.7s</TableCell>
                       <TableCell>GPT-3.5 Turbo</TableCell>
                       <TableCell>
-                        <Button variant="outline" size="sm">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="text-primary-foreground bg-button-bg"
+                        >
                           Details
                         </Button>
                       </TableCell>
@@ -383,7 +405,11 @@ export default async function AdminAIPerformancePage() {
                       <TableCell>1.9s</TableCell>
                       <TableCell>GPT-4</TableCell>
                       <TableCell>
-                        <Button variant="outline" size="sm">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="text-primary-foreground bg-button-bg"
+                        >
                           Details
                         </Button>
                       </TableCell>

@@ -35,7 +35,7 @@ export default async function AdminUsersPage() {
   const { data: users, error: usersError } = await supabase
     .from("users")
     .select(
-      "id, email, created_at, last_sign_in_at, user_organizations(role, organization_id, organizations(name))",
+      "id, email, created_at, last_sign_in_at, user_organizations(role, organization_id, organizations(name))"
     )
     .order("created_at", { ascending: false });
 
@@ -49,7 +49,9 @@ export default async function AdminUsersPage() {
 
       <main className="container mx-auto py-8 px-4">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold tracking-tight">User Management</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">
+            User Management
+          </h1>
           <p className="text-muted-foreground mt-2">
             Manage user accounts, roles, and permissions
           </p>
@@ -57,13 +59,23 @@ export default async function AdminUsersPage() {
 
         <div className="flex justify-between items-center mb-6">
           <div className="flex gap-4">
-            <Input placeholder="Search users..." className="w-[300px]" />
-            <Button variant="outline">Search</Button>
+            <Input
+              placeholder="Search users..."
+              className="w-[300px] bg-input text-foreground"
+            />
+            <Button
+              variant="outline"
+              className="text-primary-foreground bg-button-bg"
+            >
+              Search
+            </Button>
           </div>
-          <Button>Add New User</Button>
+          <Button className="text-primary-foreground bg-button-bg">
+            Add New User
+          </Button>
         </div>
 
-        <Card>
+        <Card className="bg-card text-card-foreground">
           <CardHeader>
             <CardTitle>All Users</CardTitle>
             <CardDescription>
@@ -95,7 +107,7 @@ export default async function AdminUsersPage() {
                     ? new Date(user.last_sign_in_at).toLocaleDateString()
                     : "Never";
                   const created = new Date(
-                    user.created_at,
+                    user.created_at
                   ).toLocaleDateString();
                   const isActive = !!user.last_sign_in_at;
 
@@ -125,10 +137,18 @@ export default async function AdminUsersPage() {
                       </TableCell>
                       <TableCell>
                         <div className="flex gap-2">
-                          <Button variant="outline" size="sm">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="text-primary-foreground bg-button-bg"
+                          >
                             Edit
                           </Button>
-                          <Button variant="outline" size="sm">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="text-primary-foreground bg-button-bg"
+                          >
                             Impersonate
                           </Button>
                         </div>

@@ -29,15 +29,15 @@ export default async function SocialMediaPage() {
   const organizationId = userOrgs[0].organization_id;
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-[hsl(var(--background))]">
       <DashboardNavbar />
 
       <main className="container mx-auto py-8 px-4">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold tracking-tight">
+          <h1 className="text-3xl font-bold tracking-tight text-[hsl(var(--foreground))]">
             Social Media Engagement
           </h1>
-          <p className="text-muted-foreground mt-2">
+          <p className="text-[hsl(var(--muted-foreground))] mt-2">
             Monitor engagement metrics and sentiment across your social media
             channels
           </p>

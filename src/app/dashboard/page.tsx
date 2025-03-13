@@ -152,93 +152,95 @@ export default async function DashboardPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-[hsl(var(--background))]">
       <DashboardNavbar />
 
       <main className="container mx-auto py-8 px-4">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold tracking-tight">
+          <h1 className="text-3xl font-bold tracking-tight text-[hsl(var(--foreground))]">
             {organizationName} {t("dashboard.title")}
           </h1>
-          <p className="text-muted-foreground mt-2">
+          <p className="text-[hsl(var(--muted-foreground))] mt-2">
             {t("dashboard.overview")}
           </p>
         </div>
 
         {/* Date Range Selector - This would be a client component in a real app */}
         <div className="flex justify-end mb-6">
-          <div className="flex items-center space-x-2 bg-muted/50 p-2 rounded-md">
-            <Calendar className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm">{t("dashboard.dateRange")}</span>
+          <div className="flex items-center space-x-2 bg-[hsl(var(--muted))]/50 p-2 rounded-md">
+            <Calendar className="h-4 w-4 text-[hsl(var(--muted-foreground))]" />
+            <span className="text-sm text-[hsl(var(--foreground))]">
+              {t("dashboard.dateRange")}
+            </span>
           </div>
         </div>
 
         {/* Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          <Card>
+          <Card className="bg-[hsl(var(--card))] text-[hsl(var(--card-foreground))]">
             <CardContent className="p-6 flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-muted-foreground">
+                <p className="text-sm font-medium text-[hsl(var(--muted-foreground))]">
                   {t("dashboard.totalFeedback")}
                 </p>
                 <h3 className="text-2xl font-bold mt-1">330</h3>
-                <p className="text-xs text-muted-foreground mt-1">
+                <p className="text-xs text-[hsl(var(--muted-foreground))] mt-1">
                   ↑ 12% from last week
                 </p>
               </div>
-              <div className="p-3 bg-primary/10 rounded-full">
-                <MessageSquare className="h-6 w-6 text-primary" />
+              <div className="p-3 bg-[hsl(var(--primary))]/10 rounded-full">
+                <MessageSquare className="h-6 w-6 text-[hsl(var(--primary))]" />
               </div>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-[hsl(var(--card))] text-[hsl(var(--card-foreground))]">
             <CardContent className="p-6 flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-muted-foreground">
+                <p className="text-sm font-medium text-[hsl(var(--muted-foreground))]">
                   {t("dashboard.positiveSentiment")}
                 </p>
                 <h3 className="text-2xl font-bold mt-1">65%</h3>
-                <p className="text-xs text-muted-foreground mt-1">
+                <p className="text-xs text-[hsl(var(--muted-foreground))] mt-1">
                   ↑ 5% from last week
                 </p>
               </div>
-              <div className="p-3 bg-green-100 rounded-full">
-                <TrendingUp className="h-6 w-6 text-green-600" />
+              <div className="p-3 bg-[hsl(var(--success))]/10 rounded-full">
+                <TrendingUp className="h-6 w-6 text-[hsl(var(--success))]" />
               </div>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-[hsl(var(--card))] text-[hsl(var(--card-foreground))]">
             <CardContent className="p-6 flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-muted-foreground">
+                <p className="text-sm font-medium text-[hsl(var(--muted-foreground))]">
                   {t("dashboard.negativeSentiment")}
                 </p>
                 <h3 className="text-2xl font-bold mt-1">15%</h3>
-                <p className="text-xs text-muted-foreground mt-1">
+                <p className="text-xs text-[hsl(var(--muted-foreground))] mt-1">
                   ↓ 3% from last week
                 </p>
               </div>
-              <div className="p-3 bg-red-100 rounded-full">
-                <TrendingUp className="h-6 w-6 text-red-600" />
+              <div className="p-3 bg-[hsl(var(--destructive))]/10 rounded-full">
+                <TrendingUp className="h-6 w-6 text-[hsl(var(--destructive))]" />
               </div>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-[hsl(var(--card))] text-[hsl(var(--card-foreground))]">
             <CardContent className="p-6 flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-muted-foreground">
+                <p className="text-sm font-medium text-[hsl(var(--muted-foreground))]">
                   {t("dashboard.activeAlerts")}
                 </p>
                 <h3 className="text-2xl font-bold mt-1">3</h3>
-                <p className="text-xs text-muted-foreground mt-1">
+                <p className="text-xs text-[hsl(var(--muted-foreground))] mt-1">
                   1 {t("dashboard.highPriority")}
                 </p>
               </div>
-              <div className="p-3 bg-yellow-100 rounded-full">
-                <AlertTriangle className="h-6 w-6 text-yellow-600" />
+              <div className="p-3 bg-[hsl(var(--warning))]/10 rounded-full">
+                <AlertTriangle className="h-6 w-6 text-[hsl(var(--warning))]" />
               </div>
             </CardContent>
           </Card>
@@ -267,7 +269,7 @@ export default async function DashboardPage() {
               </div>
             </div>
 
-            <Card>
+            <Card className="bg-[hsl(var(--card))] text-[hsl(var(--card-foreground))]">
               <CardHeader>
                 <CardTitle>{t("dashboard.recentAlerts")}</CardTitle>
                 <CardDescription>
@@ -279,23 +281,23 @@ export default async function DashboardPage() {
                   {recentAlerts.map((alert) => (
                     <div
                       key={alert.id}
-                      className="flex items-start space-x-4 p-3 rounded-md bg-muted/50"
+                      className="flex items-start space-x-4 p-3 rounded-md bg-[hsl(var(--muted))]/50"
                     >
                       <div
-                        className={`p-2 rounded-full ${alert.severity === "high" ? "bg-red-100" : alert.severity === "medium" ? "bg-yellow-100" : "bg-blue-100"}`}
+                        className={`p-2 rounded-full ${alert.severity === "high" ? "bg-[hsl(var(--destructive))]/10" : alert.severity === "medium" ? "bg-[hsl(var(--warning))]/10" : "bg-[hsl(var(--primary))]/10"}`}
                       >
                         <AlertTriangle
-                          className={`h-5 w-5 ${alert.severity === "high" ? "text-red-600" : alert.severity === "medium" ? "text-yellow-600" : "text-blue-600"}`}
+                          className={`h-5 w-5 ${alert.severity === "high" ? "text-[hsl(var(--destructive))]" : alert.severity === "medium" ? "text-[hsl(var(--warning))]" : "text-[hsl(var(--primary))]"}`}
                         />
                       </div>
                       <div className="flex-1">
                         <div className="flex justify-between items-start">
                           <h4 className="font-medium">{alert.title}</h4>
-                          <span className="text-xs text-muted-foreground">
+                          <span className="text-xs text-[hsl(var(--muted-foreground))]">
                             {alert.date}
                           </span>
                         </div>
-                        <p className="text-sm text-muted-foreground mt-1">
+                        <p className="text-sm text-[hsl(var(--muted-foreground))] mt-1">
                           {alert.description}
                         </p>
                       </div>
@@ -307,7 +309,7 @@ export default async function DashboardPage() {
           </TabsContent>
 
           <TabsContent value="sentiment" className="space-y-6">
-            <Card>
+            <Card className="bg-[hsl(var(--card))] text-[hsl(var(--card-foreground))]">
               <CardHeader>
                 <CardTitle>{t("chart.sentiment.title")}</CardTitle>
                 <CardDescription>
@@ -320,23 +322,23 @@ export default async function DashboardPage() {
             </Card>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <Card>
+              <Card className="bg-[hsl(var(--card))] text-[hsl(var(--card-foreground))]">
                 <CardHeader>
                   <CardTitle>{t("chart.sentimentBySource.title")}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="h-[300px] flex items-center justify-center text-muted-foreground">
+                  <div className="h-[300px] flex items-center justify-center text-[hsl(var(--muted-foreground))]">
                     Source breakdown chart would appear here
                   </div>
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="bg-[hsl(var(--card))] text-[hsl(var(--card-foreground))]">
                 <CardHeader>
                   <CardTitle>{t("chart.sentimentByTheme.title")}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="h-[300px] flex items-center justify-center text-muted-foreground">
+                  <div className="h-[300px] flex items-center justify-center text-[hsl(var(--muted-foreground))]">
                     Theme sentiment chart would appear here
                   </div>
                 </CardContent>
@@ -345,7 +347,7 @@ export default async function DashboardPage() {
           </TabsContent>
 
           <TabsContent value="themes" className="space-y-6">
-            <Card>
+            <Card className="bg-[hsl(var(--card))] text-[hsl(var(--card-foreground))]">
               <CardHeader>
                 <CardTitle>{t("chart.themes.title")}</CardTitle>
                 <CardDescription>
@@ -357,7 +359,7 @@ export default async function DashboardPage() {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="bg-[hsl(var(--card))] text-[hsl(var(--card-foreground))]">
               <CardHeader>
                 <CardTitle>{t("chart.themeTrends.title")}</CardTitle>
                 <CardDescription>
@@ -365,13 +367,13 @@ export default async function DashboardPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="h-[300px] flex items-center justify-center text-muted-foreground">
+                <div className="h-[300px] flex items-center justify-center text-[hsl(var(--muted-foreground))]">
                   Theme trends chart would appear here
                 </div>
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="bg-[hsl(var(--card))] text-[hsl(var(--card-foreground))]">
               <CardHeader>
                 <CardTitle>{t("chart.keywords.title")}</CardTitle>
                 <CardDescription>
@@ -379,7 +381,7 @@ export default async function DashboardPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="h-[300px] flex items-center justify-center text-muted-foreground">
+                <div className="h-[300px] flex items-center justify-center text-[hsl(var(--muted-foreground))]">
                   Keyword cloud visualization would appear here
                 </div>
               </CardContent>

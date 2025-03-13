@@ -49,11 +49,11 @@ export default function SuccessPage() {
   }, [router, supabase]);
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-background p-4">
-      <Card className="w-full max-w-md">
+    <main className="flex min-h-screen flex-col items-center justify-center bg-[hsl(var(--background))] p-4">
+      <Card className="w-full max-w-md bg-[hsl(var(--card))] text-[hsl(var(--card-foreground))]">
         <CardHeader className="text-center">
           <div className="flex justify-center mb-4">
-            <CheckCircle2 className="h-12 w-12 text-green-500" />
+            <CheckCircle2 className="h-12 w-12 text-[hsl(var(--success))]" />
           </div>
           <CardTitle className="text-2xl font-bold">
             Payment Successful!
@@ -64,10 +64,10 @@ export default function SuccessPage() {
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col items-center gap-4">
-          <p className="text-center text-muted-foreground">
+          <p className="text-center text-[hsl(var(--muted-foreground))]">
             Setting up your account...
           </p>
-          <div className="animate-pulse h-2 w-24 bg-muted rounded"></div>
+          <div className="animate-pulse h-2 w-24 bg-[hsl(var(--muted))] rounded"></div>
         </CardContent>
       </Card>
     </main>

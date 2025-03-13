@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS organizations (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   name TEXT NOT NULL,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
-  subscription_tier TEXT DEFAULT 'free',
+  subscription_tier TEXT DEFAULT 'pro',
   subscription_status TEXT DEFAULT 'active',
   stripe_customer_id TEXT,
   settings JSONB DEFAULT '{}'::jsonb
@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS user_organizations (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   user_id UUID REFERENCES auth.users(id),
   organization_id UUID REFERENCES organizations(id),
-  role TEXT NOT NULL, -- 'SYSADMIN', 'CLIENTADMIN', 'OBSERVER'
+  auth.role TEXT NOT NULL DEFAULT 'CLIENTADMIN', -- 'CLIENTADMIN', 'OBSERVER'
   created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
   invited_by UUID REFERENCES auth.users(id),
   UNIQUE(user_id, organization_id)
@@ -163,7 +163,7 @@ CREATE POLICY "Client admins can update their organizations"
   ON organizations FOR UPDATE
   USING (id IN (
     SELECT organization_id FROM user_organizations 
-    WHERE user_id = auth.uid() AND role = 'CLIENTADMIN'
+    WHERE user_id = auth.uid() AND auth.role = 'CLIENTADMIN'
   ));
 
 -- User organizations policies
@@ -179,7 +179,7 @@ CREATE POLICY "Client admins can manage user_organizations"
   ON user_organizations FOR ALL
   USING (organization_id IN (
     SELECT organization_id FROM user_organizations 
-    WHERE user_id = auth.uid() AND role = 'CLIENTADMIN'
+    WHERE user_id = auth.uid() AND auth.role = 'CLIENTADMIN'
   ));
 
 -- Feedback entries policies
@@ -195,7 +195,7 @@ CREATE POLICY "Client admins can manage feedback"
   ON feedback_entries FOR ALL
   USING (organization_id IN (
     SELECT organization_id FROM user_organizations 
-    WHERE user_id = auth.uid() AND role IN ('CLIENTADMIN', 'SYSADMIN')
+    WHERE user_id = auth.uid() AND auth.role IN ('CLIENTADMIN')
   ));
 
 -- Themes policies
@@ -211,7 +211,7 @@ CREATE POLICY "Client admins can manage themes"
   ON themes FOR ALL
   USING (organization_id IN (
     SELECT organization_id FROM user_organizations 
-    WHERE user_id = auth.uid() AND role IN ('CLIENTADMIN', 'SYSADMIN')
+    WHERE user_id = auth.uid() AND auth.role IN ('CLIENTADMIN')
   ));
 
 -- Similar policies for other tables...

@@ -61,7 +61,7 @@ ALTER TABLE sentiment_analysis_requests ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Admin can view cron logs" ON cron_logs;
 CREATE POLICY "Admin can view cron logs"
   ON cron_logs FOR SELECT
-  USING (auth.uid() IN (SELECT id FROM auth.users WHERE id IN (SELECT user_id FROM users WHERE subscription = 'admin')));
+  USING (auth.uid() IN (SELECT id FROM auth.users WHERE id IN (SELECT user_id FROM users WHERE auth.role = 'SYSADMIN')));
 
 -- Add policies for email_logs
 DROP POLICY IF EXISTS "Users can view their own email logs" ON email_logs;
@@ -73,7 +73,7 @@ CREATE POLICY "Users can view their own email logs"
 DROP POLICY IF EXISTS "Admin can view analytics reports" ON analytics_reports;
 CREATE POLICY "Admin can view analytics reports"
   ON analytics_reports FOR SELECT
-  USING (auth.uid() IN (SELECT id FROM auth.users WHERE id IN (SELECT user_id FROM users WHERE subscription = 'admin')));
+  USING (auth.uid() IN (SELECT id FROM auth.users WHERE id IN (SELECT user_id FROM users WHERE auth.role = 'SYSADMIN')));
 
 -- Add policies for sentiment_analysis_requests
 DROP POLICY IF EXISTS "Users can view their own sentiment analysis requests" ON sentiment_analysis_requests;

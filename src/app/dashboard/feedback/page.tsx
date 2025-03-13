@@ -40,15 +40,15 @@ export default async function FeedbackPage() {
   const organizationId = userOrgs[0].organization_id;
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-[hsl(var(--background))]">
       <DashboardNavbar />
 
       <main className="container mx-auto py-8 px-4">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold tracking-tight">
+          <h1 className="text-3xl font-bold tracking-tight text-[hsl(var(--foreground))]">
             {t("feedback.title")}
           </h1>
-          <p className="text-muted-foreground mt-2">
+          <p className="text-[hsl(var(--muted-foreground))] mt-2">
             {t("feedback.description")}
           </p>
         </div>
@@ -65,7 +65,7 @@ export default async function FeedbackPage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               <FeedbackForm organizationId={organizationId} />
 
-              <Card>
+              <Card className="bg-[hsl(var(--card))] text-[hsl(var(--card-foreground))]">
                 <CardHeader>
                   <CardTitle>{t("feedback.tips.title")}</CardTitle>
                   <CardDescription>
@@ -77,7 +77,7 @@ export default async function FeedbackPage() {
                     <h3 className="font-medium mb-2">
                       {t("feedback.tips.specific.title")}
                     </h3>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-[hsl(var(--muted-foreground))]">
                       {t("feedback.tips.specific.description")}
                     </p>
                   </div>
@@ -85,7 +85,7 @@ export default async function FeedbackPage() {
                     <h3 className="font-medium mb-2">
                       {t("feedback.tips.context.title")}
                     </h3>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-[hsl(var(--muted-foreground))]">
                       {t("feedback.tips.context.description")}
                     </p>
                   </div>
@@ -93,7 +93,7 @@ export default async function FeedbackPage() {
                     <h3 className="font-medium mb-2">
                       {t("feedback.tips.natural.title")}
                     </h3>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-[hsl(var(--muted-foreground))]">
                       {t("feedback.tips.natural.description")}
                     </p>
                   </div>
@@ -103,7 +103,7 @@ export default async function FeedbackPage() {
           </TabsContent>
 
           <TabsContent value="import" className="space-y-6">
-            <Card>
+            <Card className="bg-[hsl(var(--card))] text-[hsl(var(--card-foreground))]">
               <CardHeader>
                 <CardTitle>{t("feedback.import.title")}</CardTitle>
                 <CardDescription>
@@ -127,10 +127,12 @@ export default async function FeedbackPage() {
         {/* This would be a client component in a real implementation */}
         <div className="space-y-6">
           <div className="flex justify-between items-center">
-            <h2 className="text-2xl font-bold">{t("feedback.recent.title")}</h2>
+            <h2 className="text-2xl font-bold text-[hsl(var(--foreground))]">
+              {t("feedback.recent.title")}
+            </h2>
             <div className="flex gap-2">
               {/* These would be functional in a client component */}
-              <select className="px-3 py-2 border rounded-md text-sm">
+              <select className="px-3 py-2 border rounded-md text-sm bg-[hsl(var(--input))] text-[hsl(var(--foreground))]">
                 <option value="all">{t("feedback.filter.allSources")}</option>
                 <option value="manual_entry">
                   {t("feedback.filter.manualEntry")}
@@ -140,7 +142,7 @@ export default async function FeedbackPage() {
                 </option>
                 <option value="api">{t("feedback.filter.api")}</option>
               </select>
-              <select className="px-3 py-2 border rounded-md text-sm">
+              <select className="px-3 py-2 border rounded-md text-sm bg-[hsl(var(--input))] text-[hsl(var(--foreground))]">
                 <option value="all">{t("feedback.filter.allSentiment")}</option>
                 <option value="positive">
                   {t("feedback.filter.positive")}
@@ -153,13 +155,13 @@ export default async function FeedbackPage() {
             </div>
           </div>
 
-          <Card>
+          <Card className="bg-[hsl(var(--card))] text-[hsl(var(--card-foreground))]">
             <CardContent className="p-0">
               <div className="rounded-md border">
                 <div className="relative w-full overflow-auto">
                   <table className="w-full caption-bottom text-sm">
                     <thead>
-                      <tr className="border-b transition-colors hover:bg-muted/50">
+                      <tr className="border-b transition-colors hover:bg-[hsl(var(--muted))]/50">
                         <th className="h-12 px-4 text-left align-middle font-medium">
                           {t("feedback.table.feedback")}
                         </th>
@@ -175,7 +177,7 @@ export default async function FeedbackPage() {
                       </tr>
                     </thead>
                     <tbody>
-                      <tr className="border-b transition-colors hover:bg-muted/50">
+                      <tr className="border-b transition-colors hover:bg-[hsl(var(--muted))]/50">
                         <td className="p-4 align-middle">
                           This is a placeholder for feedback data that would be
                           loaded dynamically.
@@ -185,12 +187,12 @@ export default async function FeedbackPage() {
                           {new Date().toLocaleDateString()}
                         </td>
                         <td className="p-4 align-middle">
-                          <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
+                          <span className="inline-flex items-center rounded-full bg-[hsl(var(--success))] px-2.5 py-0.5 text-xs font-medium text-[hsl(var(--success-foreground))]">
                             Positive
                           </span>
                         </td>
                       </tr>
-                      <tr className="border-b transition-colors hover:bg-muted/50">
+                      <tr className="border-b transition-colors hover:bg-[hsl(var(--muted))]/50">
                         <td className="p-4 align-middle">
                           Another placeholder for feedback data.
                         </td>
@@ -199,12 +201,12 @@ export default async function FeedbackPage() {
                           {new Date().toLocaleDateString()}
                         </td>
                         <td className="p-4 align-middle">
-                          <span className="inline-flex items-center rounded-full bg-yellow-100 px-2.5 py-0.5 text-xs font-medium text-yellow-800">
+                          <span className="inline-flex items-center rounded-full bg-[hsl(var(--warning))] px-2.5 py-0.5 text-xs font-medium text-[hsl(var(--warning-foreground))]">
                             Neutral
                           </span>
                         </td>
                       </tr>
-                      <tr className="transition-colors hover:bg-muted/50">
+                      <tr className="transition-colors hover:bg-[hsl(var(--muted))]/50">
                         <td className="p-4 align-middle">
                           A third placeholder for feedback data.
                         </td>
@@ -213,7 +215,7 @@ export default async function FeedbackPage() {
                           {new Date().toLocaleDateString()}
                         </td>
                         <td className="p-4 align-middle">
-                          <span className="inline-flex items-center rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-medium text-red-800">
+                          <span className="inline-flex items-center rounded-full bg-[hsl(var(--destructive))] px-2.5 py-0.5 text-xs font-medium text-[hsl(var(--destructive-foreground))]">
                             Negative
                           </span>
                         </td>

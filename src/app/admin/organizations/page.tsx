@@ -35,7 +35,7 @@ export default async function AdminOrganizationsPage() {
   const { data: organizations, error: orgsError } = await supabase
     .from("organizations")
     .select(
-      "id, name, created_at, subscription_tier, subscription_status, user_organizations(user_id)",
+      "id, name, created_at, subscription_tier, subscription_status, user_organizations(user_id)"
     )
     .order("created_at", { ascending: false });
 
@@ -49,7 +49,9 @@ export default async function AdminOrganizationsPage() {
 
       <main className="container mx-auto py-8 px-4">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold tracking-tight">Organizations</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">
+            Organizations
+          </h1>
           <p className="text-muted-foreground mt-2">
             Manage client organizations and their subscriptions
           </p>
@@ -59,14 +61,21 @@ export default async function AdminOrganizationsPage() {
           <div className="flex gap-4">
             <Input
               placeholder="Search organizations..."
-              className="w-[300px]"
+              className="w-[300px] bg-input text-foreground"
             />
-            <Button variant="outline">Search</Button>
+            <Button
+              variant="outline"
+              className="text-primary-foreground bg-button-bg"
+            >
+              Search
+            </Button>
           </div>
-          <Button>Add New Organization</Button>
+          <Button className="text-primary-foreground bg-button-bg">
+            Add New Organization
+          </Button>
         </div>
 
-        <Card>
+        <Card className="bg-card text-card-foreground">
           <CardHeader>
             <CardTitle>All Organizations</CardTitle>
             <CardDescription>
@@ -116,10 +125,18 @@ export default async function AdminOrganizationsPage() {
                       <TableCell>{created}</TableCell>
                       <TableCell>
                         <div className="flex gap-2">
-                          <Button variant="outline" size="sm">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="text-primary-foreground bg-button-bg"
+                          >
                             View
                           </Button>
-                          <Button variant="outline" size="sm">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="text-primary-foreground bg-button-bg"
+                          >
                             Edit
                           </Button>
                         </div>

@@ -93,7 +93,9 @@ export default async function AdminLogsPage() {
 
       <main className="container mx-auto py-8 px-4">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold tracking-tight">System Logs</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">
+            System Logs
+          </h1>
           <p className="text-muted-foreground mt-2">
             Monitor application logs, errors, and system events
           </p>
@@ -102,10 +104,10 @@ export default async function AdminLogsPage() {
         <div className="flex justify-between items-center mb-6">
           <div className="flex gap-4 items-center">
             <Select defaultValue="all">
-              <SelectTrigger className="w-[150px]">
+              <SelectTrigger className="w-[150px] bg-input text-foreground">
                 <SelectValue placeholder="Log Level" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-popover text-popover-foreground">
                 <SelectItem value="all">All Levels</SelectItem>
                 <SelectItem value="error">Error</SelectItem>
                 <SelectItem value="warning">Warning</SelectItem>
@@ -115,10 +117,10 @@ export default async function AdminLogsPage() {
             </Select>
 
             <Select defaultValue="all">
-              <SelectTrigger className="w-[150px]">
+              <SelectTrigger className="w-[150px] bg-input text-foreground">
                 <SelectValue placeholder="Source" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-popover text-popover-foreground">
                 <SelectItem value="all">All Sources</SelectItem>
                 <SelectItem value="api">API</SelectItem>
                 <SelectItem value="auth">Auth</SelectItem>
@@ -127,13 +129,26 @@ export default async function AdminLogsPage() {
               </SelectContent>
             </Select>
 
-            <Input placeholder="Search logs..." className="w-[300px]" />
-            <Button variant="outline">Search</Button>
+            <Input
+              placeholder="Search logs..."
+              className="w-[300px] bg-input text-foreground"
+            />
+            <Button
+              variant="outline"
+              className="text-primary-foreground bg-button-bg"
+            >
+              Search
+            </Button>
           </div>
-          <Button variant="outline">Export Logs</Button>
+          <Button
+            variant="outline"
+            className="text-primary-foreground bg-button-bg"
+          >
+            Export Logs
+          </Button>
         </div>
 
-        <Card>
+        <Card className="bg-card text-card-foreground">
           <CardHeader>
             <CardTitle>Application Logs</CardTitle>
             <CardDescription>
@@ -181,7 +196,11 @@ export default async function AdminLogsPage() {
                       <TableCell>{log.user_id}</TableCell>
                       <TableCell>{log.ip_address}</TableCell>
                       <TableCell>
-                        <Button variant="outline" size="sm">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="text-primary-foreground bg-button-bg"
+                        >
                           Details
                         </Button>
                       </TableCell>

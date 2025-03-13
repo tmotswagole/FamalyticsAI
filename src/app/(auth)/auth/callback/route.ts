@@ -13,7 +13,11 @@ export async function GET(request: Request) {
 
     const user = await getUser(supabase);
     if (user) {
-      const redirectResponse = await handleUserRedirect(user, supabase, requestUrl);
+      const redirectResponse = await handleUserRedirect(
+        user,
+        supabase,
+        requestUrl
+      );
       if (redirectResponse) {
         return redirectResponse;
       }
@@ -36,7 +40,9 @@ async function handleUserRedirect(user: any, supabase: any, requestUrl: URL) {
   setUserCookie(user, userData?.role);
 
   if (userData?.role === "SYSADMIN") {
-    return NextResponse.redirect(new URL("/admin/dashboard", requestUrl.origin));
+    return NextResponse.redirect(
+      new URL("/admin/dashboard", requestUrl.origin)
+    );
   }
 
   if (userData?.role === "CLIENTADMIN") {
@@ -53,10 +59,16 @@ async function getUserData(user: any, supabase: any) {
   return userData;
 }
 
-async function handleClientAdminRedirect(user: any, supabase: any, requestUrl: URL) {
+async function handleClientAdminRedirect(
+  user: any,
+  supabase: any,
+  requestUrl: URL
+) {
   const userOrgs = await getUserOrganizations(user, supabase);
   if (!userOrgs || userOrgs.length === 0) {
-    return NextResponse.redirect(new URL("/success/create-organization", requestUrl.origin));
+    return NextResponse.redirect(
+      new URL("/success/create-organization", requestUrl.origin)
+    );
   }
 
   const subscription = await getUserSubscription(user, supabase);
@@ -81,4 +93,27 @@ async function getUserSubscription(user: any, supabase: any) {
     .eq("status", "active")
     .single();
   return subscription;
+}
+
+async function getOrganizationInfo(user_id: string, supabase: any) {
+  const { data: organizations } = await supabase
+    .from("organizations")
+    .select("*")
+    .in(
+      "id",
+      supabase
+        .from("user_organizations")
+        .select("organization_id")
+        .eq("user_id", user_id)
+    );
+  return organizations;
+}
+
+async function getUserInfo(user_id: string, supabase: any) {
+  const { data: userInfo } = await supabase
+    .from("admin.users")
+    .select("*")
+    .eq("id", user_id)
+    .single();
+  return userInfo;
 }

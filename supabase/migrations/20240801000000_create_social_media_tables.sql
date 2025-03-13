@@ -71,7 +71,7 @@ CREATE POLICY "Admins can insert social media accounts for their organizations"
   WITH CHECK (
     organization_id IN (
       SELECT organization_id FROM user_organizations
-      WHERE user_id = auth.uid() AND role IN ('CLIENTADMIN', 'SYSADMIN')
+      WHERE user_id = auth.uid() AND role IN ('CLIENTADMIN')
     )
   );
 
@@ -82,7 +82,7 @@ CREATE POLICY "Admins can update social media accounts in their organizations"
   USING (
     organization_id IN (
       SELECT organization_id FROM user_organizations
-      WHERE user_id = auth.uid() AND role IN ('CLIENTADMIN', 'SYSADMIN')
+      WHERE user_id = auth.uid() AND role IN ('CLIENTADMIN')
     )
   );
 
@@ -93,7 +93,7 @@ CREATE POLICY "Admins can delete social media accounts in their organizations"
   USING (
     organization_id IN (
       SELECT organization_id FROM user_organizations
-      WHERE user_id = auth.uid() AND role IN ('CLIENTADMIN', 'SYSADMIN')
+      WHERE user_id = auth.uid() AND role IN ('CLIENTADMIN')
     )
   );
 

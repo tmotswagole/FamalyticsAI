@@ -30,26 +30,29 @@ export default async function ResetPassword(props: {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-[hsl(var(--background))]">
       <DashboardNavbar />
-      <div className="flex min-h-screen flex-col items-center justify-center bg-background px-4 py-8">
-        <div className="w-full max-w-md rounded-lg border border-border bg-card p-6 shadow-sm">
+      <div className="flex min-h-screen flex-col items-center justify-center bg-[hsl(var(--background))] px-4 py-8">
+        <div className="w-full max-w-md rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-6 shadow-sm">
           <form
             className="flex flex-col space-y-6"
             action={resetPasswordAction}
           >
             <div className="space-y-2 text-center">
-              <h1 className="text-3xl font-semibold tracking-tight">
+              <h1 className="text-3xl font-semibold tracking-tight text-[hsl(var(--foreground))]">
                 Reset password
               </h1>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-[hsl(var(--muted-foreground))]">
                 Please enter your new password below.
               </p>
             </div>
 
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-sm font-medium">
+                <Label
+                  htmlFor="password"
+                  className="text-sm font-medium text-[hsl(var(--foreground))]"
+                >
                   New password
                 </Label>
                 <Input
@@ -58,7 +61,7 @@ export default async function ResetPassword(props: {
                   name="password"
                   placeholder="New password"
                   required
-                  className="w-full"
+                  className="w-full bg-[hsl(var(--input))] text-[hsl(var(--foreground))]"
                   minLength={8}
                 />
               </div>
@@ -66,7 +69,7 @@ export default async function ResetPassword(props: {
               <div className="space-y-2">
                 <Label
                   htmlFor="confirmPassword"
-                  className="text-sm font-medium"
+                  className="text-sm font-medium text-[hsl(var(--foreground))]"
                 >
                   Confirm password
                 </Label>
@@ -76,7 +79,7 @@ export default async function ResetPassword(props: {
                   name="confirmPassword"
                   placeholder="Confirm password"
                   required
-                  className="w-full"
+                  className="w-full bg-[hsl(var(--input))] text-[hsl(var(--foreground))]"
                   minLength={8}
                 />
               </div>
@@ -84,7 +87,7 @@ export default async function ResetPassword(props: {
 
             <SubmitButton
               pendingText="Resetting password..."
-              className="w-full"
+              className="w-full bg-[hsl(var(--button-bg))] text-[hsl(var(--button-primary))]"
             >
               Reset password
             </SubmitButton>

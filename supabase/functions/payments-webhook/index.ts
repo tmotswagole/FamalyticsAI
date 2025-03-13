@@ -79,7 +79,7 @@ const server = createServer(async (req, res) => {
             let subscriptionTier = "starter";
             if (priceId.includes("pro")) {
               subscriptionTier = "pro";
-            } else if (priceId.includes("ent")) {
+            } else if (priceId.includes("enterprise")) {
               subscriptionTier = "enterprise";
             }
 
@@ -134,7 +134,7 @@ const server = createServer(async (req, res) => {
           let subscriptionTier = "starter";
           if (priceId.includes("pro")) {
             subscriptionTier = "pro";
-          } else if (priceId.includes("ent")) {
+          } else if (priceId.includes("enterprise")) {
             subscriptionTier = "enterprise";
           }
 

@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS public.users (
     full_name text
 );
 
--- Subscriptions table
+-- Subscriptions table (starter, pro, enterprise)
 CREATE TABLE IF NOT EXISTS public.subscriptions (
     id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
     user_id text REFERENCES public.users(user_id),

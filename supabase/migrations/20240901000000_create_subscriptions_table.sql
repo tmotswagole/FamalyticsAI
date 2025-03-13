@@ -32,8 +32,8 @@ DROP POLICY IF EXISTS "System admins can view all subscriptions" ON public.subsc
 CREATE POLICY "System admins can view all subscriptions"
   ON public.subscriptions FOR SELECT
   USING (EXISTS (
-    SELECT 1 FROM public.users
-    WHERE users.id = auth.uid() AND users.is_super_admin = true
+    SELECT 1 FROM public.users, auth.users au
+    WHERE public.users.id = auth.uid() AND users.id = au.id AND au.is_super_admin = true
   ));
 
 DROP POLICY IF EXISTS "Service role can manage subscriptions" ON public.subscriptions;

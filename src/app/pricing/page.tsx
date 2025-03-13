@@ -76,10 +76,10 @@ export default async function Pricing() {
       <Navbar />
       <div className="container mx-auto px-4 py-16">
         <div className="text-center mb-16">
-          <h1 className="text-4xl font-bold mb-4">
+          <h1 className="text-4xl font-bold mb-4 text-[hsl(var(--foreground))]">
             Simple, transparent pricing
           </h1>
-          <p className="text-xl text-muted-foreground">
+          <p className="text-xl text-[hsl(var(--muted-foreground))]">
             Choose the perfect plan for your needs
           </p>
         </div>

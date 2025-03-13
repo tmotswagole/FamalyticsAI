@@ -15,15 +15,15 @@ export default async function AnalyticsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-[hsl(var(--background))]">
       <DashboardNavbar />
 
       <main className="container mx-auto py-8 px-4">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold tracking-tight">
+          <h1 className="text-3xl font-bold tracking-tight text-[hsl(var(--foreground))]">
             Website Analytics
           </h1>
-          <p className="text-muted-foreground mt-2">
+          <p className="text-[hsl(var(--muted-foreground))] mt-2">
             Monitor website traffic and user engagement metrics
           </p>
         </div>
