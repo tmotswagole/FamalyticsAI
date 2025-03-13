@@ -81,14 +81,14 @@ export default function PricingCard({
             Most Popular
           </div>
         )}
-        <CardTitle className="text-2xl font-bold tracking-tight text-white">
+        <CardTitle className="text-2xl font-bold tracking-tight text-black">
           {item.name}
         </CardTitle>
         <CardDescription className="flex items-baseline gap-2 mt-2">
-          <span className="text-4xl font-bold text-white">
+          <span className="text-4xl font-bold text-black">
             ${item?.amount / 100}
           </span>
-          <span className="text-white">/{item?.interval}</span>
+          <span className="text-black">/{item?.interval}</span>
         </CardDescription>
       </CardHeader>
       <CardFooter className="relative">

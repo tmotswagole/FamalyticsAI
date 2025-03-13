@@ -11,7 +11,7 @@ interface SubscriptionCheckProps {
 export async function SubscriptionCheck({
   children,
   redirectTo = "/pricing",
-  requiredTier = "starter",
+  requiredTier = "pro",
 }: SubscriptionCheckProps) {
   const supabase = await createClient();
   const {
@@ -32,10 +32,9 @@ export async function SubscriptionCheck({
 
   // Define tier levels for comparison
   const tierLevels: Record<string, number> = {
-    free: 0,
-    starter: 1,
-    pro: 2,
-    enterprise: 3,
+    starter: 0,
+    pro: 1,
+    enterprise: 2,
   };
 
   // Check if the user's tier meets the required tier
