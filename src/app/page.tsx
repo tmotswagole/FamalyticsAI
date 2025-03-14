@@ -77,17 +77,17 @@ export default async function Home() {
       <section className="py-24 bg-white">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-gray-600 text-3xl font-bold mb-4">
+            <h2 className="text-primary-foreground text-3xl font-bold mb-4">
               Comprehensive Sentiment Analysis
             </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
+            <p className="text-primary-foreground max-w-2xl mx-auto">
               Famalytics helps businesses monitor, analyze, and respond to
               customer feedback across multiple channels using advanced AI
               technology.
             </p>
           </div>
 
-          <div className="text-gray-600 grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="text-primary-foreground grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
               {
                 icon: <BarChart3 className="w-6 h-6" />,
@@ -118,9 +118,9 @@ export default async function Home() {
                 key={index}
                 className="p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow"
               >
-                <div className="text-blue-600 mb-4">{feature.icon}</div>
+                <div className="text-primary mb-4">{feature.icon}</div>
                 <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
-                <p className="text-gray-600">{feature.description}</p>
+                <p className="text-primary-foreground">{feature.description}</p>
               </div>
             ))}
           </div>
@@ -130,10 +130,10 @@ export default async function Home() {
       <section className="py-20 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-gray-600 text-3xl font-bold mb-4">
+            <h2 className="text-primary-foreground text-3xl font-bold mb-4">
               How Famalytics Works
             </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
+            <p className="text-primary-foreground max-w-2xl mx-auto">
               Our platform makes it easy to understand what your customers are
               really saying
             </p>
@@ -142,12 +142,12 @@ export default async function Home() {
           <div className="grid md:grid-cols-3 gap-12 max-w-5xl mx-auto">
             <div className="flex flex-col items-center text-center">
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4">
-                <Upload className="w-8 h-8 text-blue-600" />
+                <Upload className="w-8 h-8 text-primary" />
               </div>
               <h3 className="text-xl font-semibold mb-2">
                 1. Import Your Data
               </h3>
-              <p className="text-gray-600">
+              <p className="text-primary-foreground">
                 Upload customer feedback from multiple sources or connect via
                 API
               </p>
@@ -155,22 +155,22 @@ export default async function Home() {
 
             <div className="flex flex-col items-center text-center">
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4">
-                <Bot className="w-8 h-8 text-blue-600" />
+                <Bot className="w-8 h-8 text-primary" />
               </div>
               <h3 className="text-xl font-semibold mb-2">2. AI Analysis</h3>
-              <p className="text-gray-600">
+              <p className="text-primary-foreground">
                 Our AI automatically scores sentiment and identifies key themes
               </p>
             </div>
 
             <div className="flex flex-col items-center text-center">
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4">
-                <LineChart className="w-8 h-8 text-blue-600" />
+                <LineChart className="w-8 h-8 text-primary" />
               </div>
               <h3 className="text-xl font-semibold mb-2">
                 3. Actionable Insights
               </h3>
-              <p className="text-gray-600">
+              <p className="text-primary-foreground">
                 View trends, set alerts, and export reports to improve customer
                 satisfaction
               </p>
@@ -203,10 +203,10 @@ export default async function Home() {
       <section className="py-24 bg-white">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-gray-600 text-3xl font-bold mb-4">
+            <h2 className="text-primary-foreground text-3xl font-bold mb-4">
               Who Benefits from Famalytics
             </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
+            <p className="text-primary-foreground max-w-2xl mx-auto">
               Our platform is designed for businesses that value customer
               feedback
             </p>
@@ -214,24 +214,24 @@ export default async function Home() {
 
           <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             <div className="bg-gray-50 p-8 rounded-xl">
-              <MessageSquare className="w-10 h-10 text-blue-600 mb-4" />
-              <h3 className="text-blue-600 text-xl font-semibold mb-3">
+              <MessageSquare className="w-10 h-10 text-primary mb-4" />
+              <h3 className="text-primary text-xl font-semibold mb-3">
                 Customer Support Teams
               </h3>
-              <p className="text-gray-600 mb-4">
+              <p className="text-primary-foreground mb-4">
                 Identify recurring issues and track sentiment trends across
                 support channels
               </p>
               <ul className="space-y-2">
                 <li className="flex items-start">
                   <span className="text-green-500 mr-2">✓</span>
-                  <span className="text-gray-600">
+                  <span className="text-primary-foreground">
                     Reduce response time to negative feedback
                   </span>
                 </li>
                 <li className="flex items-start">
                   <span className="text-green-500 mr-2">✓</span>
-                  <span className="text-gray-600">
+                  <span className="text-primary-foreground">
                     Prioritize issues based on sentiment impact
                   </span>
                 </li>
@@ -239,23 +239,23 @@ export default async function Home() {
             </div>
 
             <div className="bg-gray-50 p-8 rounded-xl">
-              <BarChart3 className="w-10 h-10 text-blue-600 mb-4" />
-              <h3 className="text-blue-600 text-xl font-semibold mb-3">
+              <BarChart3 className="w-10 h-10 text-primary mb-4" />
+              <h3 className="text-primary text-xl font-semibold mb-3">
                 Product Teams
               </h3>
-              <p className="text-gray-600 mb-4">
+              <p className="text-primary-foreground mb-4">
                 Understand how customers feel about specific product features
               </p>
               <ul className="space-y-2">
                 <li className="flex items-start">
                   <span className="text-green-500 mr-2">✓</span>
-                  <span className="text-gray-600">
+                  <span className="text-primary-foreground">
                     Extract feature-specific feedback automatically
                   </span>
                 </li>
                 <li className="flex items-start">
                   <span className="text-green-500 mr-2">✓</span>
-                  <span className="text-gray-600">
+                  <span className="text-primary-foreground">
                     Track sentiment changes after product updates
                   </span>
                 </li>
@@ -268,10 +268,10 @@ export default async function Home() {
       <section className="py-24 bg-gray-50" id="pricing">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-gray-600 text-3xl font-bold mb-4">
+            <h2 className="text-primary-foreground text-3xl font-bold mb-4">
               Simple, Transparent Pricing
             </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
+            <p className="text-primary-foreground max-w-2xl mx-auto">
               Choose the perfect plan for your customer feedback analysis needs
             </p>
           </div>
@@ -288,7 +288,7 @@ export default async function Home() {
                 )}
                 <div className="p-6 flex-grow">
                   <h3 className="text-2xl font-bold mb-2">{item.name}</h3>
-                  <p className="text-gray-600 mb-6">{item.description}</p>
+                  <p className="text-primary-foreground mb-6">{item.description}</p>
                   <div className="flex items-baseline mb-6">
                     <span className="text-4xl font-bold">
                       ${(item.amount / 100).toFixed(2)}
@@ -301,7 +301,7 @@ export default async function Home() {
                       {item.features.map((feature: string, index: number) => (
                         <li key={index} className="flex items-start">
                           <span className="text-green-500 mr-2">✓</span>
-                          <span className="text-gray-600">{feature}</span>
+                          <span className="text-primary-foreground">{feature}</span>
                         </li>
                       ))}
                     </ul>
@@ -318,10 +318,10 @@ export default async function Home() {
       {/* CTA Section */}
       <section className="py-20 bg-white">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-gray-600 text-3xl font-bold mb-4">
+          <h2 className="text-primary-foreground text-3xl font-bold mb-4">
             Ready to Understand Your Customers Better?
           </h2>
-          <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
+          <p className="text-primary-foreground mb-8 max-w-2xl mx-auto">
             Start analyzing customer sentiment across all your channels today.
           </p>
           <a

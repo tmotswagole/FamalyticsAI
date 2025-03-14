@@ -1,4 +1,5 @@
-// pages/docs/index.tsx
+"use client";
+
 import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import Link from "next/link";

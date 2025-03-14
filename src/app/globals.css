@@ -14,7 +14,7 @@
     --popover: 255 255 255; /* #FFFFFF - White popovers */
     --popover-foreground: 51 51 51; /* #333333 - Consistent text */
 
-    /* Primary color - Scribit blue */
+    /* Primary color - blue */
     --primary: 0 255 255; /* #00FFFF - Company blue */
     --primary-foreground: 0 0 0; /* #000000 - Black text on cyan */
 
@@ -60,59 +60,59 @@
   }
 
   .dark {
-    /* Base colors */
-    --background: 5 5 5; /* #050505 - Near-black background */
+    /* Base */
+    --background: 0 31 63; /* #001F3F - Deep teal background */
     --foreground: 234 236 198; /* #EAECC6 - Off-white text */
 
-    /* Card and container styles */
-    --card: 15 15 15; /* #0F0F0F - Dark card */
-    --card-foreground: 234 236 198; /* #EAECC6 - Text on cards */
-    --popover: 25 25 25; /* #191919 - Dark popovers */
-    --popover-foreground: 234 236 198; /* #EAECC6 - Text on popovers */
+    /* Containers */
+    --card: 0 63 95; /* #003F5F - Slightly lighter teal for cards */
+    --card-foreground: 234 236 198; /* #EAECC6 */
+    --popover: 0 76 76; /* #004C4C - Dark cyan for popovers */
+    --popover-foreground: 234 236 198; /* #EAECC6 */
 
-    /* Primary color - Company cyan */
-    --primary: 0 255 255; /* #00FFFF - Vibrant cyan */
-    --primary-foreground: 10 10 10; /* #0A0A0A - Dark text on cyan */
+    /* Primary brand color (cyan) */
+    --primary: 0 255 255; /* #00FFFF */
+    --primary-foreground: 5 5 5; /* #050505 - Ensures readability on cyan */
 
-    /* Secondary color - Off-white */
-    --secondary: 234 236 198; /* #EAECC6 - Brand off-white */
-    --secondary-foreground: 5 5 5; /* #050505 - Text on off-white */
+    /* Secondary brand color (off-white) */
+    --secondary: 234 236 198; /* #EAECC6 */
+    --secondary-foreground: 0 31 63; /* #001F3F - Contrasts well on off-white */
 
     /* Muted and accent colors */
-    --muted: 40 40 40; /* #282828 - Muted dark gray */
-    --muted-foreground: 153 153 153; /* #999999 - Subtle light text */
-    --accent: 0 204 204; /* #00CCCC - Duller cyan accent */
-    --accent-foreground: 255 255 255; /* #FFFFFF - Text on accent */
+    --muted: 61 48 61; /* #3D303D - Dark lilac */
+    --muted-foreground: 234 236 198; /* #EAECC6 */
+    --accent: 23 4 23; /* #170417 - Dark eggplant purple */
+    --accent-foreground: 234 236 198; /* #EAECC6 */
 
-    /* Functional colors */
-    --destructive: 255 76 76; /* #FF4C4C - Destructive red */
-    --destructive-foreground: 255 255 255; /* #FFFFFF - Text on red */
-    --border: 50 50 50; /* #323232 - Dark border */
-    --input: 25 25 25; /* #191919 - Dark input background */
+    /* Functional */
+    --destructive: 255 76 76; /* #FF4C4C - Red for destructive actions */
+    --destructive-foreground: 255 255 255; /* #FFFFFF */
+    --border: 0 63 95; /* #003F5F - Matches card teal */
+    --input: 0 63 95; /* #003F5F - Dark input background */
     --ring: 0 255 255; /* #00FFFF - Cyan focus ring */
 
-    /* Radius for rounded corners */
-    --radius: 0.25rem; /* Subtle rounding */
+    /* Rounding */
+    --radius: 0.25rem; /* Subtle rounded corners */
 
-    /* Chart colors - variations of brand palette */
-    --chart-1: 0 255 255; /* #00FFFF - Primary cyan */
-    --chart-2: 0 204 204; /* #00CCCC - Darker cyan */
-    --chart-3: 234 236 198; /* #EAECC6 - Off-white */
-    --chart-4: 153 204 204; /* #99CCCC - Lighter cyan */
-    --chart-5: 255 76 76; /* #FF4C4C - Red accent */
+    /* Chart colors - darker cyans & purples */
+    --chart-1: 0 255 255; /* #00FFFF */
+    --chart-2: 0 63 95; /* #003F5F */
+    --chart-3: 0 76 76; /* #004C4C */
+    --chart-4: 61 48 61; /* #3D303D */
+    --chart-5: 23 4 23; /* #170417 */
 
-    /* Button styles */
-    --button-bg: 40 40 40; /* #282828 - Dark button background */
-    --button-primary: 0 255 255; /* #00FFFF - Primary button */
-    --button-secondary: 234 236 198; /* #EAECC6 - Secondary button */
+    /* Buttons */
+    --button-bg: 0 63 95; /* #003F5F - Teal button background */
+    --button-primary: 0 255 255; /* #00FFFF */
+    --button-secondary: 234 236 198; /* #EAECC6 */
 
     /* Status colors */
-    --error: 255 76 76; /* #FF4C4C - Error red */
-    --error-foreground: 255 255 255; /* #FFFFFF - Text on error */
-    --warning: 255 187 51; /* #FFBB33 - Warning yellow */
-    --warning-foreground: 5 5 5; /* #050505 - Text on warning */
-    --success: 48 209 88; /* #30D158 - Success green */
-    --success-foreground: 255 255 255; /* #FFFFFF - Text on success */
+    --error: 255 76 76; /* #FF4C4C */
+    --error-foreground: 255 255 255; /* #FFFFFF */
+    --warning: 255 187 51; /* #FFBB33 */
+    --warning-foreground: 5 5 5; /* #050505 */
+    --success: 48 209 88; /* #30D158 */
+    --success-foreground: 255 255 255; /* #FFFFFF */
   }
 }
 
