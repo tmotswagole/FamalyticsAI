@@ -15,28 +15,28 @@ export default async function Navbar() {
   } = await (await supabase).auth.getUser();
 
   return (
-    <nav className="w-full border-b border-border bg-background py-2">
+    <nav className="w-full border-b bg-background py-2">
       <div className="container mx-auto px-4 flex justify-between items-center">
         <Link href="/" prefetch className="text-xl font-bold flex items-center">
-          <BarChart3 className="w-6 h-6 mr-2 text-primary" />
+          <BarChart3 className="w-6 h-6 mr-2 text-foreground" />
           <span>{t("app.name")}</span>
         </Link>
         <div className="hidden md:flex gap-6 items-center">
           <Link
             href="#"
-            className="text-sm font-medium text-muted-foreground hover:text-foreground"
+            className="text-sm font-medium text-foreground hover:text-primary"
           >
             {t("nav.features")}
           </Link>
           <Link
             href="#"
-            className="text-sm font-medium text-muted-foreground hover:text-foreground"
+            className="text-sm font-medium text-foreground hover:text-primary"
           >
             {t("nav.howItWorks")}
           </Link>
           <Link
             href="#pricing"
-            className="text-sm font-medium text-muted-foreground hover:text-foreground"
+            className="text-sm font-medium text-foreground hover:text-primary"
           >
             {t("nav.pricing")}
           </Link>
@@ -73,13 +73,13 @@ export default async function Navbar() {
             <>
               <Link
                 href="/sign-in"
-                className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground"
+                className="px-4 py-2 text-sm font-medium text-foreground hover:opacity-75 hover:scale-[1.01] hover:text-primary transition-transform shadow-md"
               >
                 {t("nav.signIn")}
               </Link>
               <Link
                 href="/sign-up"
-                className="px-4 py-2 text-sm font-medium text-primary-foreground bg-primary rounded-md hover:bg-primary/90"
+                className="px-4 py-2 text-sm font-medium text-primary-foreground bg-foreground rounded-md transition-transform hover:text-button-secondary hover:scale-[1.01] opacity-75 shadow-md"
               >
                 {t("nav.signUp")}
               </Link>

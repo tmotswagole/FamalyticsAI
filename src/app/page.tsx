@@ -70,24 +70,24 @@ export default async function Home() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
+    <div className="min-h-screen bg-gradient-to-b from-background to-muted">
       <Navbar />
       <Hero />
       {/* Features Section */}
-      <section className="py-24 bg-white">
+      <section className="py-15 bg-background">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-primary-foreground text-3xl font-bold mb-4">
+            <h2 className="text-foreground text-3xl font-bold mb-4">
               Comprehensive Sentiment Analysis
             </h2>
-            <p className="text-primary-foreground max-w-2xl mx-auto">
+            <p className="text-foreground max-w-2xl mx-auto">
               Famalytics helps businesses monitor, analyze, and respond to
               customer feedback across multiple channels using advanced AI
               technology.
             </p>
           </div>
 
-          <div className="text-primary-foreground grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="text-foreground grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
               {
                 icon: <BarChart3 className="w-6 h-6" />,
@@ -116,24 +116,24 @@ export default async function Home() {
             ].map((feature, index) => (
               <div
                 key={index}
-                className="p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow"
+                className="p-6 bg-button-secondary rounded-xl shadow-sm hover:shadow-md transition-transform"
               >
-                <div className="text-primary mb-4">{feature.icon}</div>
+                <div className="text-foreground mb-4">{feature.icon}</div>
                 <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
-                <p className="text-primary-foreground">{feature.description}</p>
+                <p className="text-foreground">{feature.description}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
       {/* How It Works Section */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 bg-background">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-primary-foreground text-3xl font-bold mb-4">
+            <h2 className="text-foreground text-3xl font-bold mb-4">
               How Famalytics Works
             </h2>
-            <p className="text-primary-foreground max-w-2xl mx-auto">
+            <p className="text-foreground max-w-2xl mx-auto">
               Our platform makes it easy to understand what your customers are
               really saying
             </p>
@@ -141,36 +141,36 @@ export default async function Home() {
 
           <div className="grid md:grid-cols-3 gap-12 max-w-5xl mx-auto">
             <div className="flex flex-col items-center text-center">
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4">
-                <Upload className="w-8 h-8 text-primary" />
+              <div className="w-16 h-16 bg-foreground rounded-full flex items-center justify-center mb-4">
+                <Upload className="w-8 h-8 text-accent" />
               </div>
               <h3 className="text-xl font-semibold mb-2">
                 1. Import Your Data
               </h3>
-              <p className="text-primary-foreground">
+              <p className="text-foreground">
                 Upload customer feedback from multiple sources or connect via
                 API
               </p>
             </div>
 
             <div className="flex flex-col items-center text-center">
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4">
-                <Bot className="w-8 h-8 text-primary" />
+              <div className="w-16 h-16 bg-foreground rounded-full flex items-center justify-center mb-4">
+                <Bot className="w-8 h-8 text-accent" />
               </div>
               <h3 className="text-xl font-semibold mb-2">2. AI Analysis</h3>
-              <p className="text-primary-foreground">
+              <p className="text-foreground">
                 Our AI automatically scores sentiment and identifies key themes
               </p>
             </div>
 
             <div className="flex flex-col items-center text-center">
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4">
-                <LineChart className="w-8 h-8 text-primary" />
+              <div className="w-16 h-16 bg-foreground rounded-full flex items-center justify-center mb-4">
+                <LineChart className="w-8 h-8 text-accent" />
               </div>
               <h3 className="text-xl font-semibold mb-2">
                 3. Actionable Insights
               </h3>
-              <p className="text-primary-foreground">
+              <p className="text-foreground">
                 View trends, set alerts, and export reports to improve customer
                 satisfaction
               </p>
@@ -179,83 +179,83 @@ export default async function Home() {
         </div>
       </section>
       {/* Stats Section */}
-      <section className="py-20 bg-blue-600 text-white">
+      <section className="py-20 bg-card text-foreground">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-3 gap-8 text-center">
             <div>
               <div className="text-4xl font-bold mb-2">85%</div>
-              <div className="text-blue-100">Faster Insight Discovery</div>
+              <div className="text-foreground">Faster Insight Discovery</div>
             </div>
             <div>
               <div className="text-4xl font-bold mb-2">3x</div>
-              <div className="text-blue-100">
+              <div className="text-foreground">
                 Customer Satisfaction Improvement
               </div>
             </div>
             <div>
               <div className="text-4xl font-bold mb-2">24/7</div>
-              <div className="text-blue-100">Sentiment Monitoring</div>
+              <div className="text-foreground">Sentiment Monitoring</div>
             </div>
           </div>
         </div>
       </section>
       {/* Use Cases Section */}
-      <section className="py-24 bg-white">
+      <section className="py-24 bg-background">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-primary-foreground text-3xl font-bold mb-4">
+            <h2 className="text-foreground text-3xl font-bold mb-4">
               Who Benefits from Famalytics
             </h2>
-            <p className="text-primary-foreground max-w-2xl mx-auto">
+            <p className="text-foreground max-w-2xl mx-auto">
               Our platform is designed for businesses that value customer
               feedback
             </p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            <div className="bg-gray-50 p-8 rounded-xl">
-              <MessageSquare className="w-10 h-10 text-primary mb-4" />
-              <h3 className="text-primary text-xl font-semibold mb-3">
+            <div className="bg-popover p-8 rounded-xl">
+              <MessageSquare className="w-10 h-10 text-popover-foreground mb-4" />
+              <h3 className="text-popover-foreground text-xl font-semibold mb-3">
                 Customer Support Teams
               </h3>
-              <p className="text-primary-foreground mb-4">
+              <p className="text-popover-foreground mb-4">
                 Identify recurring issues and track sentiment trends across
                 support channels
               </p>
               <ul className="space-y-2">
                 <li className="flex items-start">
-                  <span className="text-green-500 mr-2">✓</span>
-                  <span className="text-primary-foreground">
+                  <span className="text-success mr-2">✓</span>
+                  <span className="text-popover-foreground">
                     Reduce response time to negative feedback
                   </span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-green-500 mr-2">✓</span>
-                  <span className="text-primary-foreground">
+                  <span className="text-success mr-2">✓</span>
+                  <span className="text-popover-foreground">
                     Prioritize issues based on sentiment impact
                   </span>
                 </li>
               </ul>
             </div>
 
-            <div className="bg-gray-50 p-8 rounded-xl">
-              <BarChart3 className="w-10 h-10 text-primary mb-4" />
-              <h3 className="text-primary text-xl font-semibold mb-3">
+            <div className="bg-popover p-8 rounded-xl">
+              <BarChart3 className="w-10 h-10 text-popover-foreground mb-4" />
+              <h3 className="text-popover-foreground text-xl font-semibold mb-3">
                 Product Teams
               </h3>
-              <p className="text-primary-foreground mb-4">
+              <p className="text-popover-foreground mb-4">
                 Understand how customers feel about specific product features
               </p>
               <ul className="space-y-2">
                 <li className="flex items-start">
-                  <span className="text-green-500 mr-2">✓</span>
-                  <span className="text-primary-foreground">
+                  <span className="text-success mr-2">✓</span>
+                  <span className="text-popover-foreground">
                     Extract feature-specific feedback automatically
                   </span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-green-500 mr-2">✓</span>
-                  <span className="text-primary-foreground">
+                  <span className="text-success mr-2">✓</span>
+                  <span className="text-popover-foreground">
                     Track sentiment changes after product updates
                   </span>
                 </li>
@@ -265,68 +265,102 @@ export default async function Home() {
         </div>
       </section>
       {/* Pricing Section */}
-      <section className="py-24 bg-gray-50" id="pricing">
+      <section className="py-24 bg-background" id="pricing">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-primary-foreground text-3xl font-bold mb-4">
+            <h2 className="text-foreground text-3xl font-bold mb-4">
               Simple, Transparent Pricing
             </h2>
-            <p className="text-primary-foreground max-w-2xl mx-auto">
+            <p className="text-foreground max-w-2xl mx-auto">
               Choose the perfect plan for your customer feedback analysis needs
             </p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            {plans?.map((item: any) => (
-              <div
-                key={item.id}
-                className="flex flex-col rounded-lg overflow-hidden bg-white shadow-lg border border-gray-200 transition-all hover:shadow-xl"
-              >
-                {item.popular && (
-                  <div className="bg-blue-600 text-white text-center py-2 font-medium">
+            {plans?.map((item: any) =>
+              item.popular ? (
+                <div
+                  key={item.id}
+                  className="flex flex-col rounded-lg overflow-hidden bg-card scale-[1.07] shadow-lg border border-foreground transition-all hover:shadow-xl"
+                >
+                  <div className="bg-foreground text-primary-foreground text-center py-2 font-medium">
                     Most Popular
                   </div>
-                )}
-                <div className="p-6 flex-grow">
-                  <h3 className="text-2xl font-bold mb-2">{item.name}</h3>
-                  <p className="text-primary-foreground mb-6">{item.description}</p>
-                  <div className="flex items-baseline mb-6">
-                    <span className="text-4xl font-bold">
-                      ${(item.amount / 100).toFixed(2)}
-                    </span>
-                    <span className="text-gray-500 ml-2">/{item.interval}</span>
+                  <div className="p-6 flex-grow">
+                    <h3 className="text-2xl font-bold mb-2">{item.name}</h3>
+                    <p className="text-foreground mb-6">{item.description}</p>
+                    <div className="flex items-baseline mb-6">
+                      <span className="text-4xl font-bold">
+                        ${(item.amount / 100).toFixed(2)}
+                      </span>
+                      <span className="text-foreground ml-2">
+                        /{item.interval}
+                      </span>
+                    </div>
+                    <div className="border-t border-primary pt-6 mb-6">
+                      <h4 className="font-semibold mb-4">Features include:</h4>
+                      <ul className="space-y-3">
+                        {item.features.map((feature: string, index: number) => (
+                          <li key={index} className="flex items-start">
+                            <span className="text-success mr-2">✓</span>
+                            <span className="text-foreground">{feature}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
-                  <div className="border-t border-gray-200 pt-6 mb-6">
-                    <h4 className="font-semibold mb-4">Features include:</h4>
-                    <ul className="space-y-3">
-                      {item.features.map((feature: string, index: number) => (
-                        <li key={index} className="flex items-start">
-                          <span className="text-green-500 mr-2">✓</span>
-                          <span className="text-primary-foreground">{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
+                  <div className="p-6 bg-foreground border-t border-primary">
+                    <PricingButton item={item} user={user ?? undefined} />
                   </div>
                 </div>
-                <div className="p-6 bg-gray-50 border-t border-gray-200">
-                  <PricingButton item={item} user={user ?? undefined} />
+              ) : (
+                <div
+                  key={item.id}
+                  className="flex flex-col rounded-lg overflow-hidden bg-card shadow-lg border border-primary transition-all hover:shadow-xl"
+                >
+                  <div className="p-6 flex-grow">
+                    <h3 className="text-2xl font-bold mb-2">{item.name}</h3>
+                    <p className="text-foreground mb-6">{item.description}</p>
+                    <div className="flex items-baseline mb-6">
+                      <span className="text-4xl font-bold">
+                        ${(item.amount / 100).toFixed(2)}
+                      </span>
+                      <span className="text-foreground ml-2">
+                        /{item.interval}
+                      </span>
+                    </div>
+                    <div className="border-t border-primary pt-6 mb-6">
+                      <h4 className="font-semibold mb-4">Features include:</h4>
+                      <ul className="space-y-3">
+                        {item.features.map((feature: string, index: number) => (
+                          <li key={index} className="flex items-start">
+                            <span className="text-success mr-2">✓</span>
+                            <span className="text-foreground">{feature}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                  <div className="p-6 bg-primary border-t border-primary">
+                    <PricingButton item={item} user={user ?? undefined} />
+                  </div>
                 </div>
-              </div>
-            ))}
+              )
+            )}
           </div>
         </div>
       </section>
       {/* CTA Section */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-muted">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-primary-foreground text-3xl font-bold mb-4">
+          <h2 className="text-foreground text-3xl font-bold mb-4">
             Ready to Understand Your Customers Better?
           </h2>
-          <p className="text-primary-foreground mb-8 max-w-2xl mx-auto">
+          <p className="text-foreground mb-8 max-w-2xl mx-auto">
             Start analyzing customer sentiment across all your channels today.
           </p>
           <a
             href="/dashboard"
-            className="inline-flex items-center px-6 py-3 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
+            className="inline-flex items-center px-6 py-3 text-foreground transition-transform bg-button-secondary rounded-lg hover:opacity-75 hover:scale-[1.01]"
           >
             Get Started Free
             <ArrowUpRight className="ml-2 w-4 h-4" />

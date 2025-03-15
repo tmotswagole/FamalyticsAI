@@ -28,8 +28,8 @@ export default function PricingButton({ item, user }: PricingButtonProps) {
       onClick={handleClick}
       className={`w-full py-3 rounded-md font-medium transition-colors ${
         item.popular
-          ? "bg-accent text-foreground hover:opacity-75"
-          : "bg-background text-white hover:opacity-75"
+          ? "bg-button-secondary text-foreground transition-transform hover:opacity-75 hover:scale-[1.01]"
+          : "bg-primary-foreground text-foreground transition-transform hover:opacity-75 hover:scale-[1.01]"
       }`}
     >
       Get Started

@@ -48,7 +48,7 @@
     /* Button styles */
     --button-bg: #f8f9fa; /* #F8F9FA - Light background for buttons, used for button backgrounds */
     --button-primary: #00ffff; /* #00FFFF - Aqua Blue for primary buttons, used for primary button text color */
-    --button-secondary: #001f3f; /* #001F3F - Navy Blue for secondary buttons, used for secondary button text color */
+    --button-secondary: #004fa1; /* #004fa1 - Blue for secondary buttons, used for secondary button text color */
 
     /* Status colors */
     --error: #ff4c4c; /* #FF4C4C - Bright Red for errors, used for error state backgrounds (e.g. error messages, error highlights) */
@@ -61,58 +61,58 @@
 
   .dark {
     /* Base */
-    --background: #001f3f; /* #001F3F - Navy Blue background, used for the background of the webpage in dark mode */
-    --foreground: #ffffff; /* #FFFFFF - White text, used for primary text content in dark mode */
+    --background: #03131a; /* #03131A - Dark Cyan background, used as the main background in dark mode */
+    --foreground: #f8f8f8; /* #F8F8F8 - Light Gray text, used for primary text content in dark mode */
 
     /* Containers */
-    --card: #003f5f; /* #003F5F - Teal Blue for cards, used for the background of card components in dark mode */
-    --card-foreground: #001f3f; /* #001F3F - Navy Blue text, used for text within cards in dark mode */
-    --popover: #004c4c; /* #004C4C - Dark Cyan for popovers, used for the background of popovers and modals in dark mode */
-    --popover-foreground: #001f3f; /* #001F3F - Navy Blue text, used for text in popovers in dark mode */
+    --card: #04303c; /* #04303C - Slightly lighter dark cyan for card backgrounds in dark mode */
+    --card-foreground: #f8f8f8; /* #F8F8F8 - Light text for content within cards in dark mode */
+    --popover: #04505c; /* #04505C - Variant of dark cyan for popover/modal backgrounds in dark mode */
+    --popover-foreground: #f8f8f8; /* #F8F8F8 - Light text for popovers in dark mode */
 
-    /* Primary brand color (cyan) */
-    --primary: #00ffff; /* #00FFFF - Aqua Blue, used for primary interactive elements (buttons, links, active states) in dark mode */
-    --primary-foreground: #050505; /* #050505 - Very Dark Gray text on Aqua Blue, used for text on primary interactive elements in dark mode */
+    /* Primary brand color (soft pastel blue) */
+    --primary: #8fd6e8; /* #8FD6E8 - Pastel Blue, used for primary interactive elements (buttons, links, active states) in dark mode */
+    --primary-foreground: #050505; /* #050505 - Very Dark Gray text on primary elements for contrast in dark mode */
 
-    /* Secondary brand color (dark blue) */
-    --secondary: #001f3f; /* #001F3F - Navy Blue, used for secondary UI elements (backgrounds for less prominent sections, sidebars, or accent blocks) in dark mode */
-    --secondary-foreground: #001f3f; /* #001F3F - Navy Blue text, used for text on secondary elements in dark mode */
+    /* Secondary brand color (mid-tone blue) */
+    --secondary: #0a3c55; /* #0A3C55 - Mid-tone Blue, used for secondary UI elements (sidebars, accent blocks) in dark mode */
+    --secondary-foreground: #f8f8f8; /* #F8F8F8 - Light text on secondary elements in dark mode */
 
     /* Muted and accent colors */
     --muted: #3d303d; /* #3D303D - Dark Lilac, used for muted backgrounds or disabled elements in dark mode */
-    --muted-foreground: #001f3f; /* #001F3F - Navy Blue text, used for text on muted elements in dark mode */
-    --accent: #170417; /* #170417 - Dark Eggplant Purple, used for accenting elements (e.g. highlights, badges, or special sections) in dark mode */
-    --accent-foreground: #001f3f; /* #001F3F - Navy Blue text, used for text on accent elements in dark mode */
+    --muted-foreground: #f8f8f8; /* #F8F8F8 - Light text on muted elements in dark mode */
+    --accent: #5b3758; /* #5B3758 - Lighter Eggplant Purple, used for accenting elements (e.g. highlights, badges) in dark mode */
+    --accent-foreground: #f8f8f8; /* #F8F8F8 - Light text on accent elements in dark mode */
 
     /* Functional */
-    --destructive: #ff4c4c; /* #FF4C4C - Bright Red for destructive actions, used for backgrounds or borders on destructive actions (e.g. delete buttons) in dark mode */
-    --destructive-foreground: #ffffff; /* #FFFFFF - White text on Bright Red, used for text on destructive elements in dark mode */
-    --border: #003f5f; /* #003F5F - Teal Blue borders, used for borders throughout the UI in dark mode */
-    --input: #003f5f; /* #003F5F - Teal Blue input backgrounds, used for backgrounds of input fields in dark mode */
-    --ring: #00ffff; /* #00FFFF - Aqua Blue focus rings, used for focus rings or outlines around interactive elements in dark mode */
+    --destructive: #ff4c4c; /* #FF4C4C - Bright Red, used for destructive actions (e.g. delete buttons) in dark mode */
+    --destructive-foreground: #ffffff; /* #FFFFFF - White text on destructive elements in dark mode */
+    --border: #04303c; /* #04303C - Teal Blue borders, used for borders throughout the UI in dark mode */
+    --input: #04303c; /* #04303C - Background for input fields in dark mode */
+    --ring: #8fd6e8; /* #8FD6E8 - Pastel Blue focus rings, used for outlines around interactive elements in dark mode */
 
     /* Rounding */
-    --radius: 0.25rem; /* Subtle rounded corners, used for border radius on UI elements */
+    --radius: 0.25rem; /* 0.25rem - Subtle rounded corners, used for UI element border radius */
 
     /* Chart colors - darker cyans & purples */
-    --chart-1: #00ffff; /* #00FFFF - Aqua Blue, used for colors in chart data series */
-    --chart-2: #003f5f; /* #003F5F - Teal Blue, used for colors in chart data series */
-    --chart-3: #004c4c; /* #004C4C - Dark Cyan, used for colors in chart data series */
-    --chart-4: #3d303d; /* #3D303D - Dark Lilac, used for colors in chart data series */
-    --chart-5: #170417; /* #170417 - Dark Eggplant Purple, used for colors in chart data series */
+    --chart-1: #8fd6e8; /* #8FD6E8 - Pastel Blue, used for chart data series */
+    --chart-2: #04303c; /* #04303C - Teal Blue, used for chart data series */
+    --chart-3: #04505c; /* #04505C - Variant dark cyan, used for chart data series */
+    --chart-4: #3d303d; /* #3D303D - Dark Lilac, used for chart data series */
+    --chart-5: #5b3758; /* #5B3758 - Lighter Eggplant Purple, used for chart data series */
 
     /* Buttons */
-    --button-bg: #003f5f; /* #003F5F - Teal Blue button background, used for button backgrounds in dark mode */
-    --button-primary: #00ffff; /* #00FFFF - Aqua Blue, used for primary button text color in dark mode */
-    --button-secondary: #001f3f; /* #001F3F - Navy Blue, used for secondary button text color in dark mode */
+    --button-bg: #04303c; /* #04303C - Teal Blue button background, used for buttons in dark mode */
+    --button-primary: #8fd6e8; /* #8FD6E8 - Pastel Blue, used for primary button text in dark mode */
+    --button-secondary: #006bb3; /* #006BB3 - Deeper Blue, used for secondary button text in dark mode */
 
     /* Status colors */
-    --error: #ff4c4c; /* #FF4C4C - Bright Red, used for error state backgrounds (e.g. error messages, error highlights) in dark mode */
-    --error-foreground: #ffffff; /* #FFFFFF - White text, used for text on error states in dark mode */
-    --warning: #ffbb33; /* #FFBB33 - Amber, used for warning state backgrounds (e.g. caution messages) in dark mode */
-    --warning-foreground: #050505; /* #050505 - Very Dark Gray text, used for text on warnings in dark mode */
-    --success: #30d158; /* #30D158 - Lime Green, used for success state backgrounds (e.g. confirmation messages) in dark mode */
-    --success-foreground: #ffffff; /* #FFFFFF - White text, used for text on success states in dark mode */
+    --error: #ff4c4c; /* #FF4C4C - Bright Red, used for error state backgrounds in dark mode */
+    --error-foreground: #ffffff; /* #FFFFFF - White text on error states in dark mode */
+    --warning: #ffbb33; /* #FFBB33 - Amber, used for warning state backgrounds in dark mode */
+    --warning-foreground: #050505; /* #050505 - Very Dark Gray text on warnings in dark mode */
+    --success: #30d158; /* #30D158 - Lime Green, used for success state backgrounds in dark mode */
+    --success-foreground: #ffffff; /* #FFFFFF - White text on success states in dark mode */
   }
 }
 
