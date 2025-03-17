@@ -41,7 +41,7 @@ export default function DashboardNavbar() {
   }, [supabase]);
 
   return (
-    <nav className="w-full border-b border-gray-200 bg-white py-4">
+    <nav className="w-full border-b border-primary bg-background py-4">
       <div className="container mx-auto px-4 flex justify-between items-center">
         <div className="flex items-center gap-4">
           <Link href="/" prefetch className="text-xl font-bold">
@@ -49,39 +49,33 @@ export default function DashboardNavbar() {
           </Link>
           <Link
             href="/dashboard"
-            className="text-sm font-medium text-muted-foreground hover:text-foreground"
+            className="text-sm font-medium text-foreground hover:text-primary"
           >
             {t("dashboard.title")}
           </Link>
           <Link
             href="/dashboard/feedback"
-            className="text-sm font-medium text-muted-foreground hover:text-foreground"
+            className="text-sm font-medium text-foreground hover:text-primary"
           >
             {t("feedback.title")}
           </Link>
           <Link
             href="/dashboard/analytics"
-            className="text-sm font-medium text-muted-foreground hover:text-foreground"
+            className="text-sm font-medium text-foreground hover:text-primary"
           >
             {t("analytics.title")}
           </Link>
           <Link
             href="/dashboard/social-media"
-            className="text-sm font-medium text-muted-foreground hover:text-foreground"
+            className="text-sm font-medium text-foreground hover:text-primary"
           >
             Social Media
           </Link>
           <Link
-            href="#"
-            className="text-sm font-medium text-muted-foreground hover:text-foreground"
+            href="/admin/reports"
+            className="text-sm font-medium text-foreground hover:text-primary"
           >
             Reports
-          </Link>
-          <Link
-            href="#"
-            className="text-sm font-medium text-muted-foreground hover:text-foreground"
-          >
-            Settings
           </Link>
         </div>
         <div className="flex gap-4 items-center">
@@ -102,6 +96,14 @@ export default function DashboardNavbar() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
+              <DropdownMenuItem
+                onClick={async () => {
+                  await supabase.auth.signOut();
+                  router.push("/settings");
+                }}
+              >
+                Settings
+              </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={async () => {
                   await supabase.auth.signOut();

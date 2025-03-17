@@ -282,7 +282,7 @@ export default async function Home() {
                   key={item.id}
                   className="flex flex-col rounded-lg overflow-hidden bg-card scale-[1.07] shadow-lg border border-foreground transition-all hover:shadow-xl"
                 >
-                  <div className="bg-foreground text-primary-foreground text-center py-2 font-medium">
+                  <div className="bg-card-foregroundSecondary text-primary-secondary text-center py-2 font-medium">
                     Most Popular
                   </div>
                   <div className="p-6 flex-grow">
@@ -308,7 +308,7 @@ export default async function Home() {
                       </ul>
                     </div>
                   </div>
-                  <div className="p-6 bg-foreground border-t border-primary">
+                  <div className="p-6 bg-card-primary-secondary border-t border-primary">
                     <PricingButton item={item} user={user ?? undefined} />
                   </div>
                 </div>
@@ -340,7 +340,7 @@ export default async function Home() {
                       </ul>
                     </div>
                   </div>
-                  <div className="p-6 bg-primary border-t border-primary">
+                  <div className="p-6 bg-card-foregroundSecondary border-t border-primary">
                     <PricingButton item={item} user={user ?? undefined} />
                   </div>
                 </div>

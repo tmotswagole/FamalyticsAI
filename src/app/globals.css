@@ -11,12 +11,14 @@
     /* Card and container styles */
     --card: #f8f9fa; /* #F8F9FA - Very light gray for cards, used for the background of card components */
     --card-foreground: #000629; /* #000629 - Oxford Blue for text, used for text within cards */
+    --card-foreground-secondary: #0094a1; /* #F8F8F8 - Light text for content within cards in dark mode */
     --popover: #ffffff; /* #FFFFFF - White popovers, used for the background of popovers and modals */
     --popover-foreground: #000629; /* #000629 - Oxford Blue for text, used for text in popovers */
 
     /* Primary color - blue */
     --primary: #00ffff; /* #00FFFF - Aqua Blue, used for primary interactive elements (buttons, links, active states) */
-    --primary-foreground: #000000; /* #000000 - Black text on Aqua Blue, used for text on primary interactive elements */
+    --primary-foreground: #adadad; /* #000000 - Black text on Aqua Blue, used for text on primary interactive elements */
+    --primary-secondary: #ffffff; /* #FFFFFF - White, used for the titles cards and modals */
 
     /* Secondary color - dark blue */
     --secondary: #001f3f; /* #001F3F - Navy Blue, used for secondary UI elements (backgrounds for less prominent sections, sidebars, or accent blocks) */
@@ -48,7 +50,7 @@
     /* Button styles */
     --button-bg: #f8f9fa; /* #F8F9FA - Light background for buttons, used for button backgrounds */
     --button-primary: #00ffff; /* #00FFFF - Aqua Blue for primary buttons, used for primary button text color */
-    --button-secondary: #004fa1; /* #004fa1 - Blue for secondary buttons, used for secondary button text color */
+    --button-secondary: #00a15e; /* #00a15e - Jade Green for secondary buttons, used for secondary button text color */
 
     /* Status colors */
     --error: #ff4c4c; /* #FF4C4C - Bright Red for errors, used for error state backgrounds (e.g. error messages, error highlights) */
@@ -67,12 +69,14 @@
     /* Containers */
     --card: #04303c; /* #04303C - Slightly lighter dark cyan for card backgrounds in dark mode */
     --card-foreground: #f8f8f8; /* #F8F8F8 - Light text for content within cards in dark mode */
+    --card-foreground-secondary: #f8f8f8; /* #F8F8F8 - Light text for secondary card backgrounds in dark mode */
     --popover: #04505c; /* #04505C - Variant of dark cyan for popover/modal backgrounds in dark mode */
     --popover-foreground: #f8f8f8; /* #F8F8F8 - Light text for popovers in dark mode */
 
     /* Primary brand color (soft pastel blue) */
     --primary: #8fd6e8; /* #8FD6E8 - Pastel Blue, used for primary interactive elements (buttons, links, active states) in dark mode */
     --primary-foreground: #050505; /* #050505 - Very Dark Gray text on primary elements for contrast in dark mode */
+    --primary-secondary: #050505; /* #050505 - Very Dark Gray text on primary elements for contrast in dark mode */
 
     /* Secondary brand color (mid-tone blue) */
     --secondary: #0a3c55; /* #0A3C55 - Mid-tone Blue, used for secondary UI elements (sidebars, accent blocks) in dark mode */

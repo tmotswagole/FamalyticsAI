@@ -27,6 +27,7 @@ const config = {
         primary: {
           DEFAULT: "var(--primary)",
           foreground: "var(--primary-foreground)",
+          secondary: "var(--primary-secondary)",
         },
         secondary: {
           DEFAULT: "var(--secondary)",
@@ -51,6 +52,7 @@ const config = {
         card: {
           DEFAULT: "var(--card)",
           foreground: "var(--card-foreground)",
+          foregroundSecondary: "var(--card-foreground-secondary)",
         },
         chart: {
           1: "var(--chart-1)",

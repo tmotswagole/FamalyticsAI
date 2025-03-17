@@ -17,7 +17,7 @@ export default function AdminNavbar() {
   const router = useRouter();
 
   return (
-    <nav className="w-full border-b border-gray-200 bg-primary text-primary-foreground py-4">
+    <nav className="w-full border-b border-border bg-background text-foreground py-4">
       <div className="container mx-auto px-4 flex justify-between items-center">
         <div className="flex items-center gap-4">
           <Link
@@ -30,43 +30,43 @@ export default function AdminNavbar() {
           </Link>
           <Link
             href="/admin/dashboard"
-            className="text-sm font-medium text-primary-foreground/80 hover:text-primary-foreground"
+            className="text-sm font-medium text-foreground hover:text-primary"
           >
             Dashboard
           </Link>
           <Link
             href="/admin/users"
-            className="text-sm font-medium text-primary-foreground/80 hover:text-primary-foreground"
+            className="text-sm font-medium text-foreground hover:text-primary"
           >
             Users
           </Link>
           <Link
             href="/admin/organizations"
-            className="text-sm font-medium text-primary-foreground/80 hover:text-primary-foreground"
+            className="text-sm font-medium text-foreground hover:text-primary"
           >
             Organizations
           </Link>
           <Link
             href="/admin/logs"
-            className="text-sm font-medium text-primary-foreground/80 hover:text-primary-foreground"
+            className="text-sm font-medium text-foreground hover:text-primary"
           >
             System Logs
           </Link>
           <Link
             href="/admin/integrations"
-            className="text-sm font-medium text-primary-foreground/80 hover:text-primary-foreground"
+            className="text-sm font-medium text-foreground hover:text-primary"
           >
             Integrations
           </Link>
           <Link
             href="/admin/ai-performance"
-            className="text-sm font-medium text-primary-foreground/80 hover:text-primary-foreground"
+            className="text-sm font-medium text-foreground hover:text-primary"
           >
             AI Performance
           </Link>
           <Link
             href="/admin/security"
-            className="text-sm font-medium text-primary-foreground/80 hover:text-primary-foreground"
+            className="text-sm font-medium text-foreground hover:text-primary"
           >
             Security
           </Link>
@@ -75,18 +75,26 @@ export default function AdminNavbar() {
           <Button
             variant="outline"
             size="sm"
-            className="bg-primary-foreground/10 text-primary-foreground border-primary-foreground/20"
-            onClick={() => router.push("/dashboard")}
+            className="border-border"
+            onClick={() => router.push("/admin/dashboard")}
           >
             Exit Admin Mode
           </Button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="secondary" size="icon">
+              <Button variant="ghost" size="icon">
                 <UserCircle className="h-6 w-6" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
+              <DropdownMenuItem
+                onClick={async () => {
+                  await supabase.auth.signOut();
+                  router.push("/admin/settings");
+                }}
+              >
+                Settings
+              </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={async () => {
                   await supabase.auth.signOut();
