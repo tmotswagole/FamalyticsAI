@@ -4,7 +4,48 @@ import { createClient } from "../../supabase/server";
 import { encodedRedirect } from "@/utils/utils";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { setUserCookie, clearUserCookies } from "@/lib/auth-cookies";
+import {
+  setUserCookie,
+  clearUserCookies,
+  setUserRoleCookie,
+  setOrganizationCookie,
+  setUserSubscriptionCookie,
+} from "@/lib/auth-cookies";
+
+interface Subscription {
+  id: string;
+  user_id: string | null;
+  stripe_id: string | null;
+  price_id: string | null;
+  stripe_price_id: string | null;
+  currency: string | null;
+  interval: string | null;
+  status: string | null;
+  current_period_start: number | null;
+  current_period_end: number | null;
+  cancel_at_period_end: boolean | null;
+  amount: number | null;
+  started_at: number | null;
+  ends_at: number | null;
+  ended_at: number | null;
+  canceled_at: number | null;
+  customer_cancellation_reason: string | null;
+  customer_cancellation_comment: string | null;
+  metadata: Record<string, any> | null;
+  custom_field_data: Record<string, any> | null;
+  customer_id: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+interface Organization {
+  name: string;
+  created_at: string;
+  subscription_tier: string | null;
+  subscription_status: string | null;
+  stripe_customer_id: string | null;
+  settings: Record<string, any> | null;
+}
 
 export const signUpAction = async (formData: FormData) => {
   const email = formData.get("email")?.toString();
@@ -17,7 +58,7 @@ export const signUpAction = async (formData: FormData) => {
     return encodedRedirect(
       "error",
       "/sign-up",
-      "Email and password are required",
+      "Email and password are required"
     );
   }
 
@@ -62,9 +103,49 @@ export const signUpAction = async (formData: FormData) => {
   return encodedRedirect(
     "success",
     "/sign-up",
-    "Thanks for signing up! Please check your email for a verification link.",
+    "Thanks for signing up! Please check your email for a verification link."
   );
 };
+
+async function getUserData(user: any, supabase: any) {
+  const { data: userData } = await supabase
+    .from("auth.users")
+    .select("role")
+    .eq("user_id", user.id)
+    .single();
+  return userData;
+}
+
+async function getUserOrganizations(user: any, supabase: any) {
+  const { data: organization_id } = await supabase
+    .from("user_organizations")
+    .select("organization_id")
+    .eq("user_id", user.id);
+  return organization_id;
+}
+
+async function getOrganizationInfo(organization_id: string, supabase: any) {
+  // Use organization_id to query organizations table
+  const { data: organization } = await supabase
+    .from("organizations")
+    .select(
+      "name, created_at, subscription_tier, subscription_status, stripe_customer_id, settings"
+    )
+    .eq("id", organization_id)
+    .single();
+
+  return organization;
+}
+
+async function getUserSubscription(user: any, supabase: any) {
+  const { data: subscription } = await supabase
+    .from("subscriptions")
+    .select("*")
+    .eq("user_id", user.id)
+    .eq("status", "active")
+    .single();
+  return subscription;
+}
 
 export const signInAction = async (formData: FormData) => {
   const email = formData.get("email") as string;
@@ -83,50 +164,48 @@ export const signInAction = async (formData: FormData) => {
     return encodedRedirect("error", "/sign-in", error.message);
   }
 
-  if (user) {
-    // Check if user is a system admin
-    const { data: userData, error: userError } = await supabase
-      .from("auth.users")
-      .select("role")
-      .eq("user_id", user.id)
-      .single();
-
-    // Store user data in cookies
-    setUserCookie(user, userData?.role);
-
-    if (!userError && userData?.role === "SYSADMIN") {
-      return redirect("/admin/dashboard");
-    }
-
-    // Check if user is a client admin
-    if (!userError && userData?.role === "CLIENTADMIN") {
-      // Check if user has an organization
-      const { data: userOrgs } = await supabase
-        .from("user_organizations")
-        .select("organization_id")
-        .eq("user_id", user.id);
-
-      if (!userOrgs || userOrgs.length === 0) {
-        // No organization, redirect to organization creation
-        return redirect("/success/create-organization");
-      }
-
-      // Check if user has an active subscription
-      const { data: subscription } = await supabase
-        .from("subscriptions")
-        .select("status")
-        .eq("user_id", user.id)
-        .eq("status", "active")
-        .single();
-
-      if (!subscription) {
-        // No active subscription, redirect to pricing
-        return redirect("/pricing");
-      }
-    }
+  if (!user) {
+    return redirect("/sign-up");
   }
 
-  return redirect("/dashboard");
+  const userData = await getUserData(user, supabase);
+
+  if (userData?.role === "SYSADMIN") {
+    setUserCookie(user);
+    setUserCookie(userData.role);
+    return redirect("/admin/dashboard");
+  } else if (userData?.role === "CLIENTADMIN") {
+    setUserCookie(user);
+    setUserRoleCookie(userData.role);
+
+    const userOrganizations = await getUserOrganizations(user, supabase);
+
+    if (!userOrganizations || userOrganizations.length === 0) {
+      return redirect("/success/create-organization");
+    }
+
+    const organizationInfo = await getOrganizationInfo(
+      userOrganizations[0].organization_id,
+      supabase
+    );
+
+    setOrganizationCookie(organizationInfo);
+
+    const userSubscription = await getUserSubscription(user, supabase);
+
+    if (!userSubscription) {
+      return redirect("/pricing");
+    }
+
+    setUserSubscriptionCookie(userSubscription);
+    return redirect("/dashboard");
+  } else if (userData?.role === "OBSERVER") {
+    setUserCookie(user);
+    setUserRoleCookie(userData.role);
+    return redirect("/dashboard/observer");
+  }
+
+  return encodedRedirect("error", "/sign-in", "Invalid user role");
 };
 
 export const forgotPasswordAction = async (formData: FormData) => {
@@ -147,7 +226,7 @@ export const forgotPasswordAction = async (formData: FormData) => {
     return encodedRedirect(
       "error",
       "/forgot-password",
-      "Could not reset password",
+      "Could not reset password"
     );
   }
 
@@ -158,7 +237,7 @@ export const forgotPasswordAction = async (formData: FormData) => {
   return encodedRedirect(
     "success",
     "/forgot-password",
-    "Check your email for a link to reset your password.",
+    "Check your email for a link to reset your password."
   );
 };
 
@@ -172,7 +251,7 @@ export const resetPasswordAction = async (formData: FormData) => {
     return encodedRedirect(
       "error",
       "/dashboard/reset-password",
-      "Password and confirm password are required",
+      "Password and confirm password are required"
     );
   }
 
@@ -180,7 +259,7 @@ export const resetPasswordAction = async (formData: FormData) => {
     return encodedRedirect(
       "error",
       "/dashboard/reset-password",
-      "Passwords do not match",
+      "Passwords do not match"
     );
   }
 
@@ -192,14 +271,14 @@ export const resetPasswordAction = async (formData: FormData) => {
     return encodedRedirect(
       "error",
       "/dashboard/reset-password",
-      "Password update failed",
+      "Password update failed"
     );
   }
 
   return encodedRedirect(
     "success",
     "/dashboard/reset-password",
-    "Password updated successfully! You can now use your new password to sign in.",
+    "Password updated successfully! You can now use your new password to sign in."
   );
 };
 

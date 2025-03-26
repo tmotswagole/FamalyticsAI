@@ -1,3 +1,5 @@
+"use client";
+
 // pages/admin/index.tsx
 import { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
@@ -65,7 +67,12 @@ const AdminDashboard = () => {
       case "audit-logs":
         return <AuditLogsTab startDate={startDate} endDate={endDate} />;
       case "database-stats":
-        return <DatabaseStatsTab startDate={startDate.toISOString()} endDate={endDate.toISOString()} />;
+        return (
+          <DatabaseStatsTab
+            startDate={startDate.toISOString()}
+            endDate={endDate.toISOString()}
+          />
+        );
       case "users":
         return <UsersTab startDate={startDate} endDate={endDate} />;
       // Add other cases as components are created
