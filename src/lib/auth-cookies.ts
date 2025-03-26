@@ -10,28 +10,28 @@ export const REGULAR_USER_TIMEOUT = 5 * 60 * 60 * 1000; // 5 hours
 export const ADMIN_USER_TIMEOUT = 2 * 60 * 60 * 1000; // 2 hours
 
 // Set user data in cookies (excluding sensitive information)
-type SafeUserData = {
+type UserData = {
   id: string;
   email: string;
   role?: string;
   last_active: number;
 };
 
-export function setUserCookie(user: User, role?: string) {
+export function setUserCookie(user: User) {
   if (!user) return;
 
   // Create a safe version of user data (no sensitive info)
-  const safeUser: SafeUserData = {
+  const User: UserData = {
     id: user.id,
     email: user.email || "",
-    role: role,
+    role: user.role,
     last_active: Date.now(),
   };
 
   // Set the user cookie
   cookies().set({
     name: USER_COOKIE,
-    value: JSON.stringify(safeUser),
+    value: JSON.stringify(User),
     httpOnly: true,
     path: "/",
     secure: process.env.NODE_ENV === "production",
@@ -65,12 +65,12 @@ export function updateLastActive() {
 }
 
 // Get user data from cookie
-export function getUserFromCookie(): SafeUserData | null {
+export function getUserFromCookie(): UserData | null {
   const userCookie = cookies().get(USER_COOKIE);
   if (!userCookie?.value) return null;
 
   try {
-    return JSON.parse(userCookie.value) as SafeUserData;
+    return JSON.parse(userCookie.value) as UserData;
   } catch (error) {
     return null;
   }

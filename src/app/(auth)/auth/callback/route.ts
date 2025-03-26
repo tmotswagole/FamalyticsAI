@@ -13,19 +13,23 @@ export async function GET(request: Request) {
 
     const user = await getUser(supabase);
     if (user) {
-      const redirectResponse = await handleUserRedirect(
-        user,
-        supabase,
-        requestUrl
-      );
-      if (redirectResponse) {
-        return redirectResponse;
+      setUserCookie(user);
+      if (user.role === "SYSADMIN") {
+        return NextResponse.redirect(
+          new URL(redirect_to ?? "/admin/dashboard", requestUrl.origin)
+        );
+      } else if (user.role === "CLIENTADMIN") {
+        handleClientAdminRedirect(user, supabase, requestUrl);
+        return NextResponse.redirect(
+          new URL(redirect_to ?? "/dashboard", requestUrl.origin)
+        );
+      } else if (user.role === "OBSERVER") {
+        return NextResponse.redirect(
+          new URL(redirect_to ?? "/dashboard/observer", requestUrl.origin)
+        );
       }
     }
   }
-
-  const redirectTo = redirect_to ?? "/dashboard";
-  return NextResponse.redirect(new URL(redirectTo, requestUrl.origin));
 }
 
 async function getUser(supabase: any) {
@@ -33,21 +37,6 @@ async function getUser(supabase: any) {
     data: { user },
   } = await supabase.auth.getUser();
   return user;
-}
-
-async function handleUserRedirect(user: any, supabase: any, requestUrl: URL) {
-  const userData = await getUserData(user, supabase);
-  setUserCookie(user, userData?.role);
-
-  if (userData?.role === "SYSADMIN") {
-    return NextResponse.redirect(
-      new URL("/admin/dashboard", requestUrl.origin)
-    );
-  }
-
-  if (userData?.role === "CLIENTADMIN") {
-    return handleClientAdminRedirect(user, supabase, requestUrl);
-  }
 }
 
 async function getUserData(user: any, supabase: any) {
@@ -96,24 +85,25 @@ async function getUserSubscription(user: any, supabase: any) {
 }
 
 async function getOrganizationInfo(user_id: string, supabase: any) {
-  const { data: organizations } = await supabase
-    .from("organizations")
-    .select("*")
-    .in(
-      "id",
-      supabase
-        .from("user_organizations")
-        .select("organization_id")
-        .eq("user_id", user_id)
-    );
-  return organizations;
-}
-
-async function getUserInfo(user_id: string, supabase: any) {
-  const { data: userInfo } = await supabase
-    .from("admin.users")
-    .select("*")
-    .eq("id", user_id)
+  // Query user_organizations to get organization_id
+  const { data: userOrg } = await supabase
+    .from("user_organizations")
+    .select("organization_id")
+    .eq("user_id", user_id)
     .single();
-  return userInfo;
+
+  if (!userOrg) {
+    return null;
+  }
+
+  // Use organization_id to query organizations table
+  const { data: organization } = await supabase
+    .from("organizations")
+    .select(
+      "name, created_at, subscription_tier, subscription_status, stripe_customer_id, settings"
+    )
+    .eq("id", userOrg.organization_id)
+    .single();
+
+  return organization;
 }
