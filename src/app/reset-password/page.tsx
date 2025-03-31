@@ -4,7 +4,7 @@ import DashboardNavbar from "@/components/dashboard-navbar";
 import { SubmitButton } from "@/components/submit-button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { createClient } from "../../../../supabase/server";
+import { createClient } from "../../../supabase/server";
 import { redirect } from "next/navigation";
 
 export default async function ResetPassword(props: {
@@ -36,7 +36,8 @@ export default async function ResetPassword(props: {
         <div className="w-full max-w-md rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-6 shadow-sm">
           <form
             className="flex flex-col space-y-6"
-            action={resetPasswordAction}
+            action={(formData) => resetPasswordAction(formData, undefined)} //TODO: add nextrequest in params
+            method="POST"
           >
             <div className="space-y-2 text-center">
               <h1 className="text-3xl font-semibold tracking-tight text-[hsl(var(--foreground))]">

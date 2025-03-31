@@ -1,3 +1,4 @@
+import "server-only";
 import { NextRequest, NextResponse } from "next/server";
 
 // CORS headers for API responses
@@ -20,7 +21,7 @@ export async function POST(req: NextRequest) {
     if (!price_id || !user_id) {
       return NextResponse.json(
         { error: "Missing required parameters" },
-        { status: 400, headers: corsHeaders },
+        { status: 400, headers: corsHeaders }
       );
     }
 
@@ -32,13 +33,13 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(
       { sessionId: mockSessionId, url: mockCheckoutUrl },
-      { status: 200, headers: corsHeaders },
+      { status: 200, headers: corsHeaders }
     );
   } catch (error: any) {
     console.error("Error creating checkout session:", error);
     return NextResponse.json(
       { error: error.message },
-      { status: 400, headers: corsHeaders },
+      { status: 400, headers: corsHeaders }
     );
   }
 }

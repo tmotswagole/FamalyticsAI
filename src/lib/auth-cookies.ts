@@ -119,6 +119,11 @@ export function getUserFromCookie(): UserData | null {
 export function clearUserCookies() {
   cookies().delete(USER_COOKIE);
   cookies().delete(LAST_ACTIVE_COOKIE);
+  cookies().delete(USER_COOKIE);
+  cookies().delete(LAST_ACTIVE_COOKIE);
+  cookies().delete(USER_ROLE_COOKIE);
+  cookies().delete(ORGANIZATION_COOKIE);
+  cookies().delete(USER_SUBSCRIPTION_COOKIE);
 }
 
 // Check if user session has timed out

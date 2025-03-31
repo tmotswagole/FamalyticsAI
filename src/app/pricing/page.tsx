@@ -25,7 +25,7 @@ export default async function Pricing() {
   // Use mock data directly instead of fetching from API
   const plans = [
     {
-      id: "price_starter",
+      id: "starter",
       name: "Starter",
       description: "Perfect for small businesses just getting started",
       amount: 2900,
@@ -39,7 +39,7 @@ export default async function Pricing() {
       popular: false,
     },
     {
-      id: "price_pro",
+      id: "pro",
       name: "Pro",
       description: "Advanced features for growing businesses",
       amount: 7900,
@@ -54,7 +54,7 @@ export default async function Pricing() {
       popular: true,
     },
     {
-      id: "price_enterprise",
+      id: "enterprise",
       name: "Enterprise",
       description: "Custom solutions for large organizations",
       amount: 19900,

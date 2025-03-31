@@ -20,6 +20,7 @@ import { AlertCircle, CheckCircle } from "lucide-react";
 export default function CreateOrganizationPage() {
   const [orgName, setOrgName] = useState("");
   const [industry, setIndustry] = useState("");
+  const [customIndustry, setCustomIndustry] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -48,8 +49,6 @@ export default function CreateOrganizationPage() {
           name: orgName,
           industry: industry,
           created_by: user.id,
-          subscription_tier: "pro", // Default tier after payment
-          subscription_status: "active",
         })
         .select()
         .single();
@@ -91,7 +90,7 @@ export default function CreateOrganizationPage() {
         </CardHeader>
         <CardContent>
           {success ? (
-            <Alert className="bg-success-foreground text-success border-green-200">
+            <Alert className="bg-success-foreground text-success border-border">
               <CheckCircle className="h-4 w-4 text-success" />
               <AlertTitle>Success!</AlertTitle>
               <AlertDescription>
@@ -113,12 +112,33 @@ export default function CreateOrganizationPage() {
 
               <div className="space-y-2">
                 <Label htmlFor="industry">Industry</Label>
-                <Input
-                  id="industry"
-                  value={industry}
-                  onChange={(e) => setIndustry(e.target.value)}
-                  placeholder="Retail, Hospitality, Technology, etc."
-                />
+                {industry === "Other" ? (
+                  <Input
+                    id="customIndustry"
+                    value={customIndustry}
+                    onChange={(e) => setCustomIndustry(e.target.value)}
+                    placeholder="Please specify your industry"
+                    onBlur={() => setIndustry(customIndustry || "Other")}
+                  />
+                ) : (
+                  <select
+                    id="industry"
+                    value={industry}
+                    onChange={(e) => setIndustry(e.target.value)}
+                    className="w-full border rounded px-3 py-2"
+                  >
+                    <option value="" disabled>
+                      Select an industry
+                    </option>
+                    <option value="Hospitality">Hospitality</option>
+                    <option value="Retail & E-commerce">
+                      Retail & E-commerce
+                    </option>
+                    <option value="Healthcare">Healthcare</option>
+                    <option value="Travel & Tourism">Travel & Tourism</option>
+                    <option value="Other">Other</option>
+                  </select>
+                )}
               </div>
 
               {error && (

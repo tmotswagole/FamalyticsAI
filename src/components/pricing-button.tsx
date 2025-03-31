@@ -19,7 +19,7 @@ interface PricingButtonProps {
 export default function PricingButton({ item, user }: PricingButtonProps) {
   const handleClick = () => {
     window.location.href = user
-      ? `/api/create-checkout?price_id=${item.id}&user_id=${user.id}`
+      ? `/api/create-checkout?plan_id=${item.id}&user_id=${user.id}`
       : "/sign-in?redirect=pricing";
   };
 

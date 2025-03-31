@@ -1,9 +1,11 @@
-"use server";
-
-import { createClient } from "../../supabase/server";
+import "server-only";
+// import { createClient } from "../../supabase/server";
+import { NextResponse, NextRequest } from "next/server";
+import { createClient } from "@/utils/supabase/middleware";
 import { encodedRedirect } from "@/utils/utils";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { Arcjet } from "@/utils/arcjet/router";
 import {
   setUserCookie,
   clearUserCookies,
@@ -47,243 +49,382 @@ interface Organization {
   settings: Record<string, any> | null;
 }
 
-export const signUpAction = async (formData: FormData) => {
-  const email = formData.get("email")?.toString();
-  const password = formData.get("password")?.toString();
-  const fullName = formData.get("full_name")?.toString() || "";
-  const supabase = await createClient();
-  const origin = headers().get("origin");
+export const signUpAction = async (
+  formData: FormData,
+  request: NextRequest
+) => {
+  try {
+    const email = formData.get("email")?.toString();
+    const password = formData.get("password")?.toString();
+    const fullName = formData.get("full_name")?.toString() || "";
 
-  if (!email || !password) {
-    return encodedRedirect(
-      "error",
-      "/sign-up",
-      "Email and password are required"
+    const middlewareResponse = createClient(request);
+    const supabase = middlewareResponse.supabase;
+    const res = middlewareResponse.response;
+
+    // Enforce rate limiting
+    const rateLimitValidation = await Arcjet.enforceRateLimiting(request);
+    if (!rateLimitValidation.success) {
+      return NextResponse.json(
+        {
+          status: "error",
+          message: rateLimitValidation.reason || "Rate limit exceeded",
+        },
+        { status: 429 }
+      );
+    }
+
+    // Validate email format
+    const emailValidation = await Arcjet.validateEmail(
+      new Request("", { headers: { "x-user-email": email || "" } })
     );
-  }
+    if (!emailValidation.success) {
+      return NextResponse.json(
+        {
+          status: "error",
+          message: emailValidation.reason || "Invalid email address",
+        },
+        { status: 400 }
+      );
+    }
 
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.signUp({
-    email,
-    password,
-    options: {
-      emailRedirectTo: `${origin}/auth/callback`,
-      data: {
-        full_name: fullName,
-        email: email,
+    // Protect signup form
+    const signupValidation = await Arcjet.protectSignupForm(
+      new Request("", { body: JSON.stringify({ username: email, password }) })
+    );
+    if (!signupValidation.success) {
+      return NextResponse.json(
+        {
+          status: "error",
+          message: signupValidation.reason || "Invalid signup data",
+        },
+        { status: 400 }
+      );
+    }
+
+    if (!email || !password) {
+      return NextResponse.json(
+        {
+          status: "error",
+          message: "Email and password are required",
+        },
+        { status: 400 }
+      );
+    }
+
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: `${headers().get("origin")}/auth/callback`,
+        data: {
+          full_name: fullName,
+          email: email,
+        },
       },
-    },
-  });
+    });
 
-  if (error) {
-    return encodedRedirect("error", "/sign-up", error.message);
-  }
+    if (error) {
+      return NextResponse.json(
+        {
+          status: "error",
+          message: error.message,
+        },
+        { status: 400 }
+      );
+    }
 
-  if (user) {
-    try {
-      const { error: updateError } = await supabase.from("users").insert({
-        id: user.id,
-        user_id: user.id,
-        name: fullName,
-        email: email,
-        token_identifier: user.id,
-        created_at: new Date().toISOString(),
-      });
+    if (user) {
+      try {
+        const { error: updateError } = await supabase.from("users").insert({
+          id: user.id,
+          user_id: user.id,
+          name: fullName,
+          email: email,
+          token_identifier: user.id,
+          created_at: new Date().toISOString(),
+        });
 
-      if (updateError) {
-        // Error handling without console.error
+        if (updateError) {
+          throw new Error(updateError.message);
+        }
+      } catch (err) {
+        throw new Error("Failed to update user information.");
       }
-    } catch (err) {
-      // Error handling without console.error
     }
-  }
 
-  return encodedRedirect(
-    "success",
-    "/sign-up",
-    "Thanks for signing up! Please check your email for a verification link."
-  );
+    return NextResponse.json(
+      {
+        status: "success",
+        message:
+          "Thanks for signing up! Please check your email for a verification link.",
+      },
+      { status: 200 }
+    );
+  } catch (err: any) {
+    const res = createClient(request).response;
+    return NextResponse.json(
+      {
+        status: "error",
+        message: err.message || "An error occurred during signup.",
+      },
+      { status: 500 }
+    );
+  }
 };
 
-async function getUserData(user: any, supabase: any) {
-  const { data: userData } = await supabase
-    .from("auth.users")
-    .select("role")
-    .eq("user_id", user.id)
-    .single();
-  return userData;
-}
+export const signInAction = async (
+  formData: FormData,
+  request: NextRequest
+) => {
+  try {
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
 
-async function getUserOrganizations(user: any, supabase: any) {
-  const { data: organization_id } = await supabase
-    .from("user_organizations")
-    .select("organization_id")
-    .eq("user_id", user.id);
-  return organization_id;
-}
+    const middlewareResponse = createClient(request);
+    const supabase = middlewareResponse.supabase;
+    const res = middlewareResponse.response;
 
-async function getOrganizationInfo(organization_id: string, supabase: any) {
-  // Use organization_id to query organizations table
-  const { data: organization } = await supabase
-    .from("organizations")
-    .select(
-      "name, created_at, subscription_tier, subscription_status, stripe_customer_id, settings"
-    )
-    .eq("id", organization_id)
-    .single();
+    // Enforce rate limiting
+    const rateLimitValidation = await Arcjet.enforceRateLimiting(request);
+    if (!rateLimitValidation.success) {
+      return NextResponse.json(
+        {
+          status: "error",
+          message: rateLimitValidation.reason || "Rate limit exceeded",
+        },
+        { status: 429 }
+      );
+    }
 
-  return organization;
-}
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
 
-async function getUserSubscription(user: any, supabase: any) {
-  const { data: subscription } = await supabase
-    .from("subscriptions")
-    .select("*")
-    .eq("user_id", user.id)
-    .eq("status", "active")
-    .single();
-  return subscription;
-}
+    if (error) {
+      return NextResponse.json(
+        {
+          status: "error",
+          message: error.message,
+        },
+        { status: 400 }
+      );
+    }
 
-export const signInAction = async (formData: FormData) => {
-  const email = formData.get("email") as string;
-  const password = formData.get("password") as string;
-  const supabase = await createClient();
+    if (!user) {
+      return NextResponse.redirect(new URL("/sign-up", res.url));
+    }
 
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.signInWithPassword({
-    email,
-    password,
-  });
-
-  if (error) {
-    return encodedRedirect("error", "/sign-in", error.message);
-  }
-
-  if (!user) {
-    return redirect("/sign-up");
-  }
-
-  const userData = await getUserData(user, supabase);
-
-  if (userData?.role === "SYSADMIN") {
-    setUserCookie(user);
-    setUserCookie(userData.role);
-    return redirect("/admin/dashboard");
-  } else if (userData?.role === "CLIENTADMIN") {
+    const userData = await getUserData(user, supabase);
     setUserCookie(user);
     setUserRoleCookie(userData.role);
 
-    const userOrganizations = await getUserOrganizations(user, supabase);
+    if (userData?.role === "SYSADMIN") {
+      return NextResponse.redirect(new URL("/admin/dashboard", res.url));
+    } else if (userData?.role === "CLIENTADMIN") {
+      const userOrganizations = await getUserOrganizations(user, supabase);
 
-    if (!userOrganizations || userOrganizations.length === 0) {
-      return redirect("/success/create-organization");
+      if (!userOrganizations || userOrganizations.length === 0) {
+        return NextResponse.redirect(
+          new URL("/success/create-organization", res.url)
+        );
+      }
+
+      const organizationInfo = await getOrganizationInfo(
+        userOrganizations[0].organization_id,
+        supabase
+      );
+
+      setOrganizationCookie(organizationInfo);
+
+      const userSubscription = await getUserSubscription(user.id, supabase);
+
+      if (!userSubscription) {
+        return NextResponse.redirect(new URL("/success/make-payment", res.url));
+      }
+
+      setUserSubscriptionCookie(userSubscription);
+      return NextResponse.redirect(new URL("/dashboard", res.url));
+    } else if (userData?.role === "OBSERVER") {
+      return NextResponse.redirect(new URL("/dashboard/observer", res.url));
     }
 
-    const organizationInfo = await getOrganizationInfo(
-      userOrganizations[0].organization_id,
-      supabase
+    return NextResponse.json(
+      {
+        status: "error",
+        message: "Invalid user role",
+      },
+      { status: 400 }
     );
+  } catch (err: any) {
+    return NextResponse.json(
+      {
+        status: "error",
+        message: err.message || "An error occurred during sign-in.",
+      },
+      { status: 500 }
+    );
+  }
+};
 
-    setOrganizationCookie(organizationInfo);
+export const forgotPasswordAction = async (
+  formData: FormData,
+  request: NextRequest
+) => {
+  try {
+    const email = formData.get("email")?.toString();
 
-    const userSubscription = await getUserSubscription(user, supabase);
+    const middlewareResponse = createClient(request);
+    const supabase = middlewareResponse.supabase;
+    const res = middlewareResponse.response;
+    const origin = headers().get("origin");
+    const callbackUrl = formData.get("callbackUrl")?.toString();
 
-    if (!userSubscription) {
-      return redirect("/pricing");
+    // Enforce rate limiting
+    const rateLimitValidation = await Arcjet.enforceRateLimiting(request);
+    if (!rateLimitValidation.success) {
+      return NextResponse.json(
+        {
+          status: "error",
+          message: rateLimitValidation.reason || "Rate limit exceeded",
+        },
+        { status: 429 }
+      );
     }
 
-    setUserSubscriptionCookie(userSubscription);
-    return redirect("/dashboard");
-  } else if (userData?.role === "OBSERVER") {
-    setUserCookie(user);
-    setUserRoleCookie(userData.role);
-    return redirect("/dashboard/observer");
-  }
+    if (!email) {
+      return NextResponse.json(
+        {
+          status: "error",
+          message: "Email is required",
+        },
+        { status: 400 }
+      );
+    }
 
-  return encodedRedirect("error", "/sign-in", "Invalid user role");
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${origin}/auth/callback?redirect_to=/reset-password`,
+    });
+
+    if (error) {
+      return NextResponse.json(
+        {
+          status: "error",
+          message: "Could not reset password.",
+        },
+        { status: 400 }
+      );
+    }
+
+    if (callbackUrl) {
+      return redirect(callbackUrl);
+    }
+
+    return NextResponse.json(
+      {
+        status: "success",
+        message: "Check your email for a link to reset your password.",
+      },
+      { status: 200 }
+    );
+  } catch (err: any) {
+    return NextResponse.json(
+      {
+        status: "error",
+        message:
+          err.message || "An error occurred while resetting the password.",
+      },
+      { status: 500 }
+    );
+  }
 };
 
-export const forgotPasswordAction = async (formData: FormData) => {
-  const email = formData.get("email")?.toString();
-  const supabase = await createClient();
-  const origin = headers().get("origin");
-  const callbackUrl = formData.get("callbackUrl")?.toString();
+export const resetPasswordAction = async (
+  formData: FormData,
+  request: NextRequest
+) => {
+  try {
+    const middlewareResponse = createClient(request);
+    const supabase = middlewareResponse.supabase;
+    const res = middlewareResponse.response;
 
-  if (!email) {
-    return encodedRedirect("error", "/forgot-password", "Email is required");
-  }
+    const password = formData.get("password") as string;
+    const confirmPassword = formData.get("confirmPassword") as string;
 
-  const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${origin}/auth/callback?redirect_to=/dashboard/reset-password`,
-  });
+    // Enforce rate limiting
+    const rateLimitValidation = await Arcjet.enforceRateLimiting(request);
+    if (!rateLimitValidation.success) {
+      return NextResponse.json(
+        {
+          status: "error",
+          message: rateLimitValidation.reason || "Rate limit exceeded",
+        },
+        { status: 429 }
+      );
+    }
 
-  if (error) {
-    return encodedRedirect(
-      "error",
-      "/forgot-password",
-      "Could not reset password"
+    if (!password || !confirmPassword) {
+      return NextResponse.json(
+        {
+          status: "error",
+          message: "Password and confirm password are required",
+        },
+        { status: 400 }
+      );
+    }
+
+    if (password !== confirmPassword) {
+      return NextResponse.json(
+        {
+          status: "error",
+          message: "Passwords do not match",
+        },
+        { status: 400 }
+      );
+    }
+
+    const { error } = await supabase.auth.updateUser({
+      password: password,
+    });
+
+    if (error) {
+      return NextResponse.json(
+        {
+          status: "error",
+          message: "Password update failed.",
+        },
+        { status: 400 }
+      );
+    }
+
+    return NextResponse.json(
+      {
+        status: "success",
+        message:
+          "Password updated successfully! You can now use your new password to sign in.",
+      },
+      { status: 200 }
+    );
+  } catch (err: any) {
+    return NextResponse.json(
+      {
+        status: "error",
+        message:
+          err.message || "An error occurred while updating the password.",
+      },
+      { status: 500 }
     );
   }
-
-  if (callbackUrl) {
-    return redirect(callbackUrl);
-  }
-
-  return encodedRedirect(
-    "success",
-    "/forgot-password",
-    "Check your email for a link to reset your password."
-  );
 };
 
-export const resetPasswordAction = async (formData: FormData) => {
-  const supabase = await createClient();
-
-  const password = formData.get("password") as string;
-  const confirmPassword = formData.get("confirmPassword") as string;
-
-  if (!password || !confirmPassword) {
-    return encodedRedirect(
-      "error",
-      "/dashboard/reset-password",
-      "Password and confirm password are required"
-    );
-  }
-
-  if (password !== confirmPassword) {
-    return encodedRedirect(
-      "error",
-      "/dashboard/reset-password",
-      "Passwords do not match"
-    );
-  }
-
-  const { error } = await supabase.auth.updateUser({
-    password: password,
-  });
-
-  if (error) {
-    return encodedRedirect(
-      "error",
-      "/dashboard/reset-password",
-      "Password update failed"
-    );
-  }
-
-  return encodedRedirect(
-    "success",
-    "/dashboard/reset-password",
-    "Password updated successfully! You can now use your new password to sign in."
-  );
-};
-
-export const signOutAction = async () => {
-  const supabase = await createClient();
+export const signOutAction = async (request: NextRequest, supabase: any) => {
   await supabase.auth.signOut();
 
   // Clear user cookies on logout
@@ -292,19 +433,159 @@ export const signOutAction = async () => {
   return redirect("/sign-in");
 };
 
-export const checkUserSubscription = async (userId: string) => {
-  const supabase = await createClient();
+/**
+ * Methods to query the database and find user specific information.
+ * These methods are used to retrieve user data, organizations, and subscription information.
+ */
+export const checkUserSubscription = async (
+  userId: string,
+  request: NextRequest
+) => {
+  try {
+    const middlewareResponse = createClient(request);
+    const supabase = middlewareResponse.supabase;
 
-  const { data: subscription, error } = await supabase
-    .from("subscriptions")
-    .select("*")
-    .eq("user_id", userId)
-    .eq("status", "active")
-    .single();
+    const subscription = await getUserSubscription(userId, supabase);
 
-  if (error) {
-    return false;
+    return subscription;
+  } catch (err: any) {
+    return NextResponse.json(
+      {
+        status: "error",
+        message:
+          err.message || "An error occurred while checking the subscription.",
+      },
+      { status: 500 }
+    );
   }
-
-  return !!subscription;
 };
+
+export const checkUserOrganizations = async (
+  userId: string,
+  request: NextRequest
+) => {
+  try {
+    const middlewareResponse = createClient(request);
+    const supabase = middlewareResponse.supabase;
+
+    const organizationInfo = await getOrganizationInfo(userId, supabase);
+
+    return !!organizationInfo;
+  } catch (err: any) {
+    return NextResponse.json(
+      {
+        status: "error",
+        message:
+          err.message || "An error occurred while checking user organizations.",
+      },
+      { status: 500 }
+    );
+  }
+};
+
+export const checkUserExists = async (userId: string, request: NextRequest) => {
+  try {
+    const middlewareResponse = createClient(request);
+    const supabase = middlewareResponse.supabase;
+
+    const { data: user, error } = await supabase
+      .from("auth.users")
+      .select("id")
+      .eq("id", userId)
+      .single();
+
+    if (error || !user) {
+      return false;
+    }
+
+    return true;
+  } catch (err: any) {
+    return NextResponse.json(
+      {
+        status: "error",
+        message:
+          err.message || "An error occurred while checking user existence.",
+      },
+      { status: 500 }
+    );
+  }
+};
+
+/**
+ * Methods to query the database and find user specific information.
+ * These methods are used to retrieve user data, organizations, and subscription information.
+ */
+async function getUserData(user: any, supabase: any) {
+  try {
+    const { data: userData } = await supabase
+      .from("auth.users")
+      .select("role")
+      .eq("id", user.id)
+      .single();
+    return userData;
+  } catch (err: any) {
+    throw new Error(
+      err.message || "An error occurred while fetching user data."
+    );
+  }
+}
+
+async function getUserOrganizations(user: any, supabase: any) {
+  try {
+    const { data: userOrgs } = await supabase
+      .from("user_organizations")
+      .select("organization_id")
+      .eq("user_id", user.id);
+    return userOrgs;
+  } catch (err: any) {
+    throw new Error(
+      err.message || "An error occurred while fetching user organizations."
+    );
+  }
+}
+
+async function getUserSubscription(userId: any, supabase: any) {
+  try {
+    const { data: subscription } = await supabase
+      .from("subscriptions")
+      .select("status")
+      .eq("user_id", userId)
+      .eq("status", "active")
+      .single();
+    return subscription;
+  } catch (err: any) {
+    throw new Error(
+      err.message || "An error occurred while fetching user subscription."
+    );
+  }
+}
+
+async function getOrganizationInfo(user_id: string, supabase: any) {
+  try {
+    // Query user_organizations to get organization_id
+    const { data: userOrg } = await supabase
+      .from("user_organizations")
+      .select("organization_id")
+      .eq("user_id", user_id)
+      .single();
+
+    if (!userOrg) {
+      return null;
+    }
+
+    // Use organization_id to query organizations table
+    const { data: organization } = await supabase
+      .from("organizations")
+      .select(
+        "name, created_at, subscription_tier, subscription_status, stripe_customer_id, settings"
+      )
+      .eq("id", userOrg.organization_id)
+      .single();
+
+    return organization;
+  } catch (err: any) {
+    throw new Error(
+      err.message || "An error occurred while fetching organization info."
+    );
+  }
+}
