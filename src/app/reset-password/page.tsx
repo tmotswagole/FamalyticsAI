@@ -4,14 +4,48 @@ import DashboardNavbar from "@/components/dashboard-navbar";
 import { SubmitButton } from "@/components/submit-button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { createClient } from "../../../supabase/server";
+import { createClient } from "@/utils/supabase/middleware";
 import { redirect } from "next/navigation";
+import { NextRequest } from "next/server";
 
-export default async function ResetPassword(props: {
-  searchParams: Promise<Message>;
-}) {
+const getClientIp = (request: NextRequest): string | null => {
+  const forwardedFor = request.headers.get("x-forwarded-for");
+  if (forwardedFor) {
+    const ip = forwardedFor.split(",").map((ip) => ip.trim())[0];
+    if (ip) return ip;
+  }
+
+  return (
+    request.headers.get("cf-connecting-ip") || // Cloudflare
+    request.headers.get("x-real-ip") || // Nginx Reverse Proxy
+    request.ip ||
+    null
+  );
+};
+
+export default async function ResetPassword(
+  props: Readonly<{
+    searchParams: Promise<Message>;
+  }>
+) {
   const searchParams = await props.searchParams;
-  const supabase = await createClient();
+
+  // Safely retrieve the current URL
+  const currentUrl =
+    typeof window !== "undefined" ? new URL(window.location.href) : null;
+
+  if (!currentUrl) {
+    throw new Error("Unable to retrieve the current URL.");
+  }
+
+  // Create a NextRequest object
+  const request = new NextRequest(currentUrl.toString(), {
+    headers: {
+      cookie: document.cookie,
+    },
+  });
+
+  const supabase = createClient(request).supabase;
 
   // Check if user is authenticated
   const {
@@ -36,7 +70,9 @@ export default async function ResetPassword(props: {
         <div className="w-full max-w-md rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-6 shadow-sm">
           <form
             className="flex flex-col space-y-6"
-            action={(formData) => resetPasswordAction(formData, undefined)} //TODO: add nextrequest in params
+            action={async (formData) => {
+              await resetPasswordAction(formData, request);
+            }}
             method="POST"
           >
             <div className="space-y-2 text-center">
