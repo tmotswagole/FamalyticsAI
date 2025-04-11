@@ -18,7 +18,7 @@ export async function middleware(request: NextRequest) {
     }
   }
   // Define protected admin routes
-  const adminRoutes = ["/admin", "/admin/dashboard"];
+  const adminRoutes = ["/admin/dashboard"];
   const isAdminRoute = adminRoutes.some((route) =>
     request.nextUrl.pathname.startsWith(route)
   );
@@ -37,7 +37,7 @@ export async function middleware(request: NextRequest) {
 
     // If regular user tries to access admin routes, redirect to home
     if (isAdminRoute && session.user.role !== "SYSADMIN") {
-      return NextResponse.redirect(new URL("/", request.url));
+      return NextResponse.redirect(new URL("/dashboard", request.url));
     }
   }
 
