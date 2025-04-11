@@ -1,6 +1,5 @@
 import { signInAction } from "@/app/actions";
-import { NextResponse, NextRequest } from "next/server";
-import { createClient } from "@/utils/supabase/middleware";
+import { NextRequest } from "next/server";
 import { FormMessage, Message } from "@/components/form-message";
 import Navbar from "@/components/navbar";
 import { SubmitButton } from "@/components/submit-button";
@@ -24,19 +23,20 @@ export default async function SignInPage({ searchParams }: LoginProps) {
   }
 
   // Safely retrieve the current URL
-  const currentUrl =
-    typeof window !== "undefined" ? new URL(window.location.href) : null;
+  // const currentUrl =
+  //   typeof window !== "undefined" ? new URL(window.location.href) : "http://localhost:3000/";
 
-  if (!currentUrl) {
-    throw new Error("Unable to retrieve the current URL.");
-  }
+  // if (!currentUrl) {
+  //   throw new Error("Unable to retrieve the current URL.");
+  // }
 
   // Create a NextRequest object
-  const request = new NextRequest(currentUrl.toString(), {
-    headers: {
-      cookie: document.cookie,
-    },
-  });
+  // const request = new NextRequest(currentUrl.toString());
+
+  const handleSubmit = async (formData: FormData) => {
+    "use server";
+    await signInAction(formData, new NextRequest((typeof window !== "undefined" ? new URL(window.location.href) : "http://localhost:3000/").toString()));
+  };
 
   return (
     <>
@@ -45,9 +45,7 @@ export default async function SignInPage({ searchParams }: LoginProps) {
         <div className="w-full max-w-md rounded-lg border border-border bg-card p-6 shadow-sm">
           <form
             className="flex flex-col space-y-6"
-            action={async (formData) => {
-              await signInAction(formData, request);
-            }}
+            action={handleSubmit}
             method="POST"
           >
             <div className="space-y-2 text-center">

@@ -9,7 +9,7 @@ import {
   LAST_ACTIVE_COOKIE,
   ADMIN_USER_TIMEOUT,
   REGULAR_USER_TIMEOUT,
-} from "./lib/auth-cookies";
+} from "@/lib/constants";
 import { Arcjet } from "./utils/arcjet/router";
 
 /**

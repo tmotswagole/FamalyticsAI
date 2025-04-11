@@ -77,6 +77,16 @@ export const API_ENDPOINTS = {
   NOTIFICATIONS: "/api/notifications",
 };
 
+// Constants that can be used anywhere (client or server)
+export const USER_COOKIE = "famalytics_user";
+export const LAST_ACTIVE_COOKIE = "famalytics_last_active";
+export const USER_ROLE_COOKIE = "famalytics_user_role";
+export const ORGANIZATION_COOKIE = "famalytics_organization";
+export const USER_SUBSCRIPTION_COOKIE = "famalytics_user_subscription";
+
+export const REGULAR_USER_TIMEOUT = 5 * 60 * 60 * 1000; // 5 hours
+export const ADMIN_USER_TIMEOUT = 2 * 60 * 60 * 1000; // 2 hours
+
 // OpenAI models
 export const OPENAI_MODELS = {
   GPT_3_5_TURBO: "gpt-3.5-turbo",

@@ -1,5 +1,3 @@
-// import { createClient } from "../../../../../supabase/server";
-import "server-only";
 import { createClient } from "@/utils/supabase/middleware";
 import { NextResponse, NextRequest } from "next/server";
 

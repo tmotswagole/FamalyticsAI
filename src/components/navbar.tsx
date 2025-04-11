@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { createClient } from "../../supabase/server";
+import { createClient } from "@/utils/supabase/middleware";
+import { NextRequest } from "next/server";
 import { Button } from "./ui/button";
 import { BarChart3 } from "lucide-react";
 import UserProfile from "./user-profile";
@@ -8,11 +9,25 @@ import { LanguageSelector } from "./language-selector";
 import { t } from "@/lib/content";
 
 export default async function Navbar() {
-  const supabase = createClient();
+  // Safely retrieve the current URL
+  const currentUrl =
+    typeof window !== "undefined"
+      ? new URL(window.location.href)
+      : "http://localhost:3000/";
+
+  if (!currentUrl) {
+    throw new Error("Unable to retrieve the current URL.");
+  }
+
+  // Create a NextRequest object
+  const request = new NextRequest(currentUrl.toString());
+
+  const createClientResponse = createClient(request);
+  const supabase = createClientResponse.supabase;
 
   const {
     data: { user },
-  } = await (await supabase).auth.getUser();
+  } = await supabase.auth.getUser();
 
   return (
     <nav className="w-full border-b bg-background py-2">

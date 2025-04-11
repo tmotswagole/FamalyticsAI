@@ -1,8 +1,10 @@
+// "use client";
+
+import { AuthClient } from "@/lib/api/cookies-client";
 import Hero from "@/components/hero";
 import Navbar from "@/components/navbar";
-import PricingCard from "@/components/pricing-card";
 import Footer from "@/components/footer";
-import { createClient } from "../../supabase/server";
+import StripePricingWrapper from "@/components/stripe-pricing-wrapper";
 import {
   ArrowUpRight,
   BarChart3,
@@ -12,62 +14,18 @@ import {
   Upload,
   Bot,
 } from "lucide-react";
-import PricingButton from "@/components/pricing-button";
 
 export default async function Home() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  let user: { id: string; email: string; last_active: number } | null = null;
+  let error: string | null = null;
 
-  // Use mock data directly instead of fetching from API
-  const plans = [
-    {
-      id: "price_starter",
-      name: "Starter",
-      description: "Perfect for small businesses just getting started",
-      amount: 99,
-      interval: "month",
-      features: [
-        "Up to 1,000 feedback entries/month",
-        "Basic sentiment analysis",
-        "CSV imports",
-        "Email support",
-      ],
-      popular: false,
-    },
-    {
-      id: "price_pro",
-      name: "Pro",
-      description: "Advanced features for growing businesses",
-      amount: 299,
-      interval: "month",
-      features: [
-        "Up to 5,000 feedback entries/month",
-        "Advanced sentiment analysis",
-        "Theme extraction",
-        "API access",
-        "Priority support",
-      ],
-      popular: true,
-    },
-    {
-      id: "price_enterprise",
-      name: "Enterprise",
-      description: "Custom solutions for large organizations",
-      amount: 499,
-      interval: "month",
-      features: [
-        "Unlimited feedback entries",
-        "Custom AI models",
-        "White-labeling",
-        "Dedicated account manager",
-        "24/7 support",
-        "Custom integrations",
-      ],
-      popular: false,
-    },
-  ];
+  try {
+    const response = await AuthClient.getCurrentUser();
+    user = response.data ?? null;
+  } catch (err) {
+    // Log the error or handle it if necessary
+    console.error(err instanceof Error ? err.message : String(err));
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted">
@@ -276,76 +234,7 @@ export default async function Home() {
             </p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            {plans?.map((item: any) =>
-              item.popular ? (
-                <div
-                  key={item.id}
-                  className="flex flex-col rounded-lg overflow-hidden bg-card scale-[1.07] shadow-lg border border-foreground transition-all hover:shadow-xl"
-                >
-                  <div className="bg-card-foregroundSecondary text-primary-secondary text-center py-2 font-medium">
-                    Most Popular
-                  </div>
-                  <div className="p-6 flex-grow">
-                    <h3 className="text-2xl font-bold mb-2">{item.name}</h3>
-                    <p className="text-foreground mb-6">{item.description}</p>
-                    <div className="flex items-baseline mb-6">
-                      <span className="text-4xl font-bold">
-                        ${(item.amount / 100).toFixed(2)}
-                      </span>
-                      <span className="text-foreground ml-2">
-                        /{item.interval}
-                      </span>
-                    </div>
-                    <div className="border-t border-primary pt-6 mb-6">
-                      <h4 className="font-semibold mb-4">Features include:</h4>
-                      <ul className="space-y-3">
-                        {item.features.map((feature: string, index: number) => (
-                          <li key={index} className="flex items-start">
-                            <span className="text-success mr-2">✓</span>
-                            <span className="text-foreground">{feature}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-                  <div className="p-6 bg-card-primary-secondary border-t border-primary">
-                    <PricingButton item={item} user={user ?? undefined} />
-                  </div>
-                </div>
-              ) : (
-                <div
-                  key={item.id}
-                  className="flex flex-col rounded-lg overflow-hidden bg-card shadow-lg border border-primary transition-all hover:shadow-xl"
-                >
-                  <div className="p-6 flex-grow">
-                    <h3 className="text-2xl font-bold mb-2">{item.name}</h3>
-                    <p className="text-foreground mb-6">{item.description}</p>
-                    <div className="flex items-baseline mb-6">
-                      <span className="text-4xl font-bold">
-                        ${(item.amount / 100).toFixed(2)}
-                      </span>
-                      <span className="text-foreground ml-2">
-                        /{item.interval}
-                      </span>
-                    </div>
-                    <div className="border-t border-primary pt-6 mb-6">
-                      <h4 className="font-semibold mb-4">Features include:</h4>
-                      <ul className="space-y-3">
-                        {item.features.map((feature: string, index: number) => (
-                          <li key={index} className="flex items-start">
-                            <span className="text-success mr-2">✓</span>
-                            <span className="text-foreground">{feature}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-                  <div className="p-6 bg-card-foregroundSecondary border-t border-primary">
-                    <PricingButton item={item} user={user ?? undefined} />
-                  </div>
-                </div>
-              )
-            )}
+            <StripePricingWrapper />
           </div>
         </div>
       </section>

@@ -1,4 +1,7 @@
-import { NextResponse } from "next/server"; /**
+import { NextRequest } from "next/server";
+import type { NextApiRequest, NextApiResponse } from "next";
+
+/**
  * The `Arcjet` class provides a centralized and reusable implementation of various
  * security and validation mechanisms. By using static methods, this class ensures
  * that the logic can be accessed globally without the need to instantiate the class.
@@ -71,8 +74,6 @@ export class Arcjet {
   /**
    * Enforce rate limiting to prevent abuse by limiting requests per IP.
    * This method tracks the timestamp of the last request made by each IP address.
-   * If a request is made within a restricted time window (e.g., less than 1 second),
-   * the request is denied to enforce rate limiting.
    *
    * @param req - The incoming request object.
    * @returns {Promise<{ success: boolean; reason?: string }>}
@@ -114,12 +115,32 @@ export class Arcjet {
    * @returns {Promise<{ success: boolean; reason?: string }>}
    */
   static async enforceRateLimitingWithTime(
-    req: Request,
+    req: NextApiRequest,
+    rateLimitTime: number
+  ): Promise<{ success: boolean; reason?: string }> {
+    const ip =
+      req.headers["x-forwarded-for"]?.toString() ||
+      req.socket.remoteAddress ||
+      "unknown";
+    const now = Date.now();
+    const lastRequestTime = this.rateLimitMap.get(ip) || 0;
+
+    if (now - lastRequestTime < rateLimitTime) {
+      // Number request (in milliseconds) per second provided from the call point.
+      return { success: false, reason: "Rate limit exceeded" };
+    }
+
+    this.rateLimitMap.set(ip, now);
+    return { success: true };
+  }
+
+  static async enforceRateLimitingWithTimeNormal(
+    req: NextRequest,
     rateLimitTime: number
   ): Promise<{ success: boolean; reason?: string }> {
     const ip =
       req.headers.get("x-forwarded-for") ||
-      req.headers.get("remote-addr") ||
+      req.ip ||
       "unknown";
     const now = Date.now();
     const lastRequestTime = this.rateLimitMap.get(ip) || 0;

@@ -9,7 +9,8 @@ import FinancialPerformanceTab from "../../../components/admin/tabs/FinancialPer
 import AuditLogsTab from "../../../components/admin/tabs/AuditLogs/page";
 import DatabaseStatsTab from "../../../components/admin/tabs/DatabaseStats/page";
 import UsersTab from "../../../components/admin/tabs/Users/page";
-// Import other tab components as needed
+import AdminSettingsPage from "../settings/page";
+import { signOutAction } from "@/app/actions";
 
 // Icons for sidebar navigation
 const Icons = {
@@ -23,6 +24,8 @@ const Icons = {
   churn: "↩️",
   forecast: "🔮",
   menu: "☰",
+  settings: "⚙️",
+  logout: "🚪",
 };
 
 const AdminDashboard = () => {
@@ -75,7 +78,10 @@ const AdminDashboard = () => {
         );
       case "users":
         return <UsersTab startDate={startDate} endDate={endDate} />;
-      // Add other cases as components are created
+      case "settings":
+        return <AdminSettingsPage />;
+      // case "logout":
+      //   return signOutAction(); // export const signOutAction = async (request: NextRequest, supabase: any)
       default:
         return (
           <div className="bg-background p-6 rounded-xl shadow-sm">
